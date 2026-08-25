@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparación Oficial CCSE - España</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #52525b; border-radius: 20px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #71717a; }
+        
+        .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 300ms; }
+        
+        /* Drag & Drop and Inline Blank Styles */
+        .word-pill { cursor: grab; }
+        .word-pill:active { cursor: grabbing; opacity: 0.8; transform: scale(0.95); }
+        .word-pill.dragging { opacity: 0.4; border-style: dashed; }
+        
+        .inline-blank {
+            display: inline-block; min-width: 100px; height: 32px; vertical-align: middle;
+            background: rgba(39, 39, 42, 0.5); border: 1px solid rgba(82, 82, 91, 0.5);
+            border-radius: 6px; text-align: center; line-height: 30px; color: #a1a1aa;
+            font-size: 14px; font-family: monospace; transition: all 0.2s; padding: 0 12px; margin: 0 4px;
+        }
+        .inline-blank.drag-over { background: rgba(63, 63, 70, 0.8); border-color: #ef4444; border-style: dashed; }
+        .inline-blank.success { background: rgba(39, 39, 42, 0.8); border-color: #10b981; color: #10b981; }
+        .inline-blank.error { background: rgba(39, 39, 42, 0.8); border-color: #ef4444; color: #ef4444; animation: shake 0.3s; }
+        
+        /* Inline Select Style */
+        .inline-select {
+            display: inline-block; vertical-align: middle; margin: 0 4px;
+            background: rgba(39, 39, 42, 0.5); border: 1px solid rgba(82, 82, 91, 0.5);
+            border-radius: 6px; padding: 2px 8px; color: #e4e4e7; outline: none;
+            font-size: 14px; font-family: inherit; cursor: pointer; appearance: auto;
+            transition: all 0.3s;
+        }
+        .inline-select:focus { border-color: #ef4444; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1); }
+        .inline-select.success { border-color: #10b981; color: #10b981; }
+        .inline-select.error { border-color: #ef4444; color: #ef4444; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes pulse-pin { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        /* Interactive Map Styles */
+        .map-pin {
+            position: absolute; width: 24px; height: 24px; background-color: #ef4444;
+            border: 3px solid #fff; border-radius: 50%; transform: translate(-50%, -50%);
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .map-pin:hover { transform: translate(-50%, -50%) scale(1.2); z-index: 10; }
+        .map-pin.active-target { animation: pulse-pin 1.5s infinite; background-color: #3b82f6; }
+        .map-pin.found { background-color: #10b981; cursor: default; animation: none; transform: translate(-50%, -50%) scale(0.9); border-color: #059669; }
+        .map-pin.error { background-color: #ef4444; animation: shake 0.3s; }
+        
+        .community-label {
+            position: absolute; background: rgba(0,0,0,0.8); color: white; padding: 2px 6px;
+            border-radius: 4px; font-size: 10px; font-weight: bold; pointer-events: none;
+            transform: translate(-50%, 15px); opacity: 0; transition: opacity 0.2s; white-space: nowrap; z-index: 20;
+        }
+        .map-pin:hover + .community-label, .map-pin.found + .community-label { opacity: 1; }
+
+    </style>
+</head>
+<body class="flex h-screen bg-zinc-950 text-zinc-300 font-sans overflow-hidden">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 h-16 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between px-4 z-50">
+        <div class="flex items-center gap-2 text-zinc-100 font-bold">
+            <i data-lucide="flag" class="w-5 h-5 text-red-500"></i>
+            <span>CCSE Prep</span>
+        </div>
+        <button id="mobile-menu-btn" class="text-zinc-400 hover:text-white">
+            <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-72 bg-zinc-950 border-r border-zinc-800 flex flex-col transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0">
+        <div class="p-6 hidden md:flex items-center gap-3 border-b border-zinc-800/50">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-yellow-500 flex items-center justify-center shadow-lg">
+                <i data-lucide="landmark" class="w-6 h-6 text-white"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-zinc-100 leading-tight">Prueba CCSE</h1>
+                <p class="text-xs text-zinc-500">Nacionalidad Española</p>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="p-6 border-b border-zinc-800/50 pt-20 md:pt-6">
+            <div class="flex justify-between text-xs mb-2 text-zinc-400 font-medium uppercase tracking-wider">
+                <span>Progreso del Temario</span>
+                <span id="progress-percentage">0%</span>
+            </div>
+            <div class="h-1.5 w-full bg-zinc-900 rounded-full overflow-hidden">
+                <div id="progress-bar-fill" class="h-full bg-red-500 transition-all duration-500 ease-out rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Navigation List -->
+        <div id="sidebar-nav-list" class="flex-1 overflow-y-auto p-4 space-y-1 custom-scrollbar"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto bg-zinc-950 pt-16 md:pt-0 relative custom-scrollbar">
+        <div class="max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto p-6 md:p-10 pb-24">
+            
+            <!-- Header -->
+            <div class="mb-10 pb-6 border-b border-zinc-800/50">
+                <div class="flex items-center gap-2 mb-3">
+                    <span id="module-label" class="bg-zinc-800 text-red-400 px-2.5 py-1 rounded text-xs font-bold uppercase tracking-widest">Módulo 1</span>
+                </div>
+                <h2 id="module-title" class="text-3xl md:text-4xl font-bold text-zinc-100 tracking-tight">Gobierno, legislación y participación</h2>
+            </div>
+
+            <!-- 1. The Theory -->
+            <div class="mb-10 max-w-3xl">
+                <h3 class="text-lg font-medium text-zinc-100 mb-4 flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-5 h-5 text-zinc-500"></i>
+                    <span>Teoría Principal</span>
+                </h3>
+                <div id="module-theory" class="bg-zinc-900/40 rounded-xl p-5 md:p-6 border border-zinc-800/50 leading-relaxed text-zinc-300 text-[1.05rem]"></div>
+            </div>
+
+            <!-- 2. Key Points -->
+            <div id="steps-container" class="mb-10 hidden max-w-3xl">
+                <h3 class="text-lg font-medium text-zinc-100 mb-4 flex items-center gap-2">
+                    <i data-lucide="list-checks" class="w-5 h-5 text-zinc-500"></i>
+                    <span>Datos Clave</span>
+                </h3>
+                <div class="bg-zinc-900/40 rounded-xl p-5 md:p-6 border border-zinc-800/50">
+                    <ul id="module-steps" class="space-y-4 text-zinc-300">
+                        <!-- Filled by JS -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Extensions (Pro Tip, Mistakes) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 max-w-3xl">
+                <!-- Sabías que -->
+                <div class="bg-zinc-900/30 rounded-xl p-5 border border-zinc-800/60 relative overflow-hidden hidden" id="pro-tip-container">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="text-zinc-100 font-medium mb-1">¿Sabías que...?</h4>
+                            <p id="module-pro-tip" class="text-sm text-zinc-400 leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atención -->
+                <div class="bg-zinc-900/30 rounded-xl p-5 border border-zinc-800/60 relative overflow-hidden hidden" id="mistakes-container">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-triangle" class="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0"></i>
+                        <div>
+                            <h4 class="text-zinc-100 font-medium mb-1">Atención</h4>
+                            <p id="module-mistakes" class="text-sm text-zinc-400 leading-relaxed"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE MAP (Module 3 Only) -->
+            <div id="map-container" class="mb-10 hidden max-w-3xl">
+                <h3 class="text-lg font-medium text-zinc-100 mb-2 flex items-center gap-2">
+                    <i data-lucide="map-pinned" class="w-5 h-5 text-red-500"></i>
+                    <span>Mapa Interactivo: Comunidades Autónomas</span>
+                </h3>
+                <p class="text-sm text-zinc-400 mb-4">Haz clic en el mapa para localizar la comunidad autónoma indicada.</p>
+                
+                <div class="bg-zinc-900 rounded-xl p-6 border border-zinc-800 shadow-xl relative flex flex-col items-center">
+                    <!-- HUD -->
+                    <div class="w-full flex justify-between items-center mb-6 bg-zinc-950 p-4 rounded-lg border border-zinc-800">
+                        <div class="text-zinc-400 font-medium text-sm">Encuentra: <span id="map-target-name" class="text-xl text-white font-bold ml-2">Andalucía</span></div>
+                        <div class="text-sm font-mono text-zinc-500"><span id="map-score">0</span> / 17 encontradas</div>
+                    </div>
+                    
+                    <!-- Map Area -->
+                    <div class="relative w-full max-w-[600px] aspect-[4/3] bg-sky-950/20 rounded-lg border border-zinc-800 overflow-hidden">
+                        <!-- Blank Map of Spain (Wikimedia Commons) -->
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Spain_map_blank.svg/800px-Spain_map_blank.svg.png" alt="Mapa de España" class="absolute inset-0 w-full h-full object-contain opacity-60 mix-blend-screen pointer-events-none" />
+                        
+                        <!-- Pins Container (Injected via JS) -->
+                        <div id="map-pins-layer" class="absolute inset-0"></div>
+                    </div>
+
+                    <div id="map-feedback" class="mt-4 text-sm font-medium h-6 text-center transition-colors"></div>
+                    
+                    <button id="btn-reset-map" class="mt-6 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded text-sm transition-colors hidden">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4 inline-block mr-2"></i>Reiniciar Mapa
+                    </button>
+                </div>
+            </div>
+
+            <!-- EXERCISE CONTAINER (Quizzes & Drag/Drop) -->
+            <div id="exercise-container" class="mb-10 hidden bg-zinc-900/40 rounded-xl p-5 md:p-6 border border-zinc-800/50 max-w-3xl">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- Complete Section -->
+            <div class="max-w-3xl mt-12 pt-8 border-t border-zinc-800/50">
+                <button id="complete-btn" class="px-6 py-2.5 rounded-lg flex items-center gap-2.5 text-sm font-medium transition-colors">
+                    <i data-lucide="check" id="complete-icon" class="w-4 h-4"></i>
+                    <span id="complete-text">Marcar Módulo como Completado</span>
+                </button>
+            </div>
+
+            <!-- Footer Navigation -->
+            <div class="max-w-3xl mt-16 flex justify-between items-center">
+                <button id="btn-prev" class="text-zinc-500 hover:text-zinc-300 disabled:opacity-30 font-medium text-sm transition-colors flex items-center gap-2">
+                    &larr; <span>Módulo Anterior</span>
+                </button>
+                <button id="btn-next" class="text-red-500 hover:text-red-400 disabled:opacity-30 font-medium text-sm transition-colors flex items-center gap-2">
+                    <span>Siguiente Módulo</span> &rarr;
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        const modulesData = [
+            { 
+                id: 1, title: "Gobierno, legislación y participación", icon: "landmark", 
+                theory: "La Constitución española de 1978 es la ley fundamental. España es un Estado social y democrático de Derecho, cuya forma política es la monarquía parlamentaria. La soberanía nacional reside en el pueblo español, del que emanan los poderes del Estado.", 
+                steps: [
+                    "**Poder Ejecutivo:** El Gobierno (Presidente y Ministros) dirige la política interior y exterior.",
+                    "**Poder Legislativo:** Las Cortes Generales (Congreso de los Diputados y Senado) elaboran y aprueban las leyes.",
+                    "**Poder Judicial:** Administrado por jueces y magistrados. El Tribunal Constitucional interpreta la Constitución.",
+                    "**Jefatura del Estado:** El Rey es el Jefe del Estado, símbolo de su unidad y permanencia."
+                ],
+                proTip: "España es un Estado aconfesional (no tiene religión oficial), pero garantiza la libertad ideológica y religiosa.",
+                mistakes: "Confundir las funciones: El Rey NO hace las leyes, solo sanciona y promulga las leyes aprobadas por las Cortes.",
+                showMap: false,
+                challenges: [
+                    // Existing 5 Questions
+                    { type: 'dragdrop', wordBank: ["Rey", "Gobierno", "Cortes Generales", "Constitución"], parts: ["En España, el ", {answer: "Rey"}, " es el Jefe del Estado, pero es el ", {answer: "Gobierno"}, " quien dirige la política interior y exterior. Las leyes se aprueban en las ", {answer: "Cortes Generales"}, "."] },
+                    { type: 'checkbox', question: "1001. España es...", options: [{text: "una monarquía parlamentaria.", correct: true}, {text: "una república federal.", correct: false}, {text: "una monarquía federal.", correct: false}] },
+                    { type: 'checkbox', question: "1009. En la Constitución se establece la separación de poderes: el poder ejecutivo, el legislativo y el...", options: [{text: "judicial.", correct: true}, {text: "informativo.", correct: false}, {text: "político.", correct: false}] },
+                    { type: 'dropdown', parts: ["Las leyes orgánicas deben ser aprobadas por mayoría absoluta del ", {options: ["Senado", "Congreso de los Diputados", "Rey"], answer: "Congreso de los Diputados"}, "."] },
+                    { type: 'checkbox', question: "1015. ¿A quién corresponde la sanción y promulgación de las leyes?", options: [{text: "Al Rey.", correct: true}, {text: "Al Presidente del Gobierno.", correct: false}, {text: "Al Presidente del Tribunal Supremo.", correct: false}] },
+                    
+                    // 10 New Official-style Questions
+                    { type: 'checkbox', question: "El poder judicial está constituido por...", options: [{text: "el presidente y los ministros.", correct: false}, {text: "los jueces y magistrados.", correct: true}, {text: "los diputados y senadores.", correct: false}] },
+                    { type: 'checkbox', question: "Convocar elecciones corresponde al...", options: [{text: "Presidente del Gobierno.", correct: false}, {text: "Rey.", correct: true}, {text: "Ministro del Interior.", correct: false}] },
+                    { type: 'checkbox', question: "La Constitución española fue aprobada en referéndum en...", options: [{text: "1975", correct: false}, {text: "1978", correct: true}, {text: "1982", correct: false}] },
+                    { type: 'dropdown', parts: ["Según la Constitución, la soberanía nacional reside en el ", {options: ["Rey", "pueblo español", "Gobierno"], answer: "pueblo español"}, " del que emanan los poderes del Estado."] },
+                    { type: 'checkbox', question: "¿Quién es el Jefe del Estado en España?", options: [{text: "El Presidente del Gobierno.", correct: false}, {text: "El Rey.", correct: true}, {text: "El Presidente de las Cortes Generales.", correct: false}] },
+                    { type: 'checkbox', question: "Las elecciones generales se celebran habitualmente cada...", options: [{text: "3 años.", correct: false}, {text: "4 años.", correct: true}, {text: "5 años.", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["Congreso de los Diputados", "Senado", "Ayuntamientos"], parts: ["Las Cortes Generales están formadas por el ", {answer: "Congreso de los Diputados"}, " y el ", {answer: "Senado"}, "."] },
+                    { type: 'checkbox', question: "¿Cuál es la ley fundamental y suprema del Estado español?", options: [{text: "El Código Civil.", correct: false}, {text: "La Constitución española.", correct: true}, {text: "El Código Penal.", correct: false}] },
+                    { type: 'checkbox', question: "El Defensor del Pueblo es designado por...", options: [{text: "El Rey.", correct: false}, {text: "El Presidente del Gobierno.", correct: false}, {text: "Las Cortes Generales.", correct: true}] },
+                    { type: 'checkbox', question: "¿A quién corresponde dirigir la política interior y exterior de España?", options: [{text: "Al Rey.", correct: false}, {text: "A las Cortes Generales.", correct: false}, {text: "Al Gobierno.", correct: true}] }
+                ]
+            },
+            { 
+                id: 2, title: "Derechos y deberes fundamentales", icon: "scale", 
+                theory: "La Constitución garantiza derechos fundamentales como la vida, la igualdad, la libertad ideológica, la educación, y una vivienda digna. A su vez, establece deberes como contribuir al gasto público mediante impuestos y defender a España.", 
+                steps: [
+                    "**Mayoría de edad:** Se alcanza a los 18 años.",
+                    "**Educación:** La enseñanza básica es obligatoria y gratuita (de los 6 a los 16 años).",
+                    "**Sanidad y Seguridad Social:** Acceso a un sistema de Seguridad Social público que garantiza atención sanitaria.",
+                    "**Participación:** Derecho a votar en elecciones mediante sufragio universal, libre, igual, directo y secreto."
+                ],
+                proTip: "Los extranjeros residentes de países de la UE y de países con acuerdos pueden votar en las elecciones municipales.",
+                mistakes: "Creer que la educación es obligatoria hasta los 18. Es obligatoria y gratuita solo hasta los 16 años (Educación Secundaria Obligatoria).",
+                showMap: false,
+                challenges: [
+                    // Existing 5 Questions
+                    { type: 'dropdown', parts: ["Los españoles son mayores de edad a los ", {options: ["16 años", "18 años", "21 años"], answer: "18 años"}, " y la educación básica es obligatoria de los 6 a los ", {options: ["14 años", "16 años", "18 años"], answer: "16 años"}, "."] },
+                    { type: 'checkbox', question: "2031. La enseñanza básica en España es obligatoria y gratuita.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] },
+                    { type: 'checkbox', question: "2033. En España, los ciudadanos pueden desplazarse libremente por todo el territorio nacional.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["tributario", "equitativo", "público"], parts: ["Todos contribuirán al sostenimiento de los gastos públicos de acuerdo con su capacidad económica mediante un sistema ", {answer: "tributario"}, " justo y ", {answer: "equitativo"}, "."] },
+                    { type: 'checkbox', question: "2010. Los extranjeros en España tienen los mismos derechos que los españoles...", options: [{text: "en todos los casos.", correct: false}, {text: "en los términos que establezcan los tratados y la ley.", correct: true}, {text: "solo si proceden de la Unión Europea.", correct: false}] },
+                    
+                    // 10 New Official-style Questions
+                    { type: 'checkbox', question: "Los españoles tienen derecho a elegir libremente su residencia y a circular libremente por el territorio nacional.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] },
+                    { type: 'checkbox', question: "La Constitución reconoce el derecho a la huelga de los trabajadores para la defensa de sus intereses.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] },
+                    { type: 'dropdown', parts: ["En España no hay una religión oficial del Estado. España es un Estado ", {options: ["Aconfesional", "Católico", "Laico"], answer: "Aconfesional"}, "."] },
+                    { type: 'checkbox', question: "Los ciudadanos de la UE residentes en España pueden votar en las elecciones...", options: [{text: "Generales.", correct: false}, {text: "Municipales.", correct: true}, {text: "Autonómicas.", correct: false}] },
+                    { type: 'checkbox', question: "La Constitución española establece que la edad legal para contraer matrimonio es a partir de...", options: [{text: "los 16 años.", correct: true}, {text: "los 18 años.", correct: false}, {text: "los 21 años.", correct: false}] },
+                    { type: 'checkbox', question: "Hombres y mujeres son iguales en derechos civiles y laborales.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["Salud", "Educación", "Seguridad Social"], parts: ["Todos tienen derecho a la protección de la ", {answer: "Salud"}, " y los poderes públicos mantendrán un régimen público de ", {answer: "Seguridad Social"}, "."] },
+                    { type: 'checkbox', question: "¿Es obligatorio el servicio militar en España en la actualidad?", options: [{text: "Sí, para hombres y mujeres.", correct: false}, {text: "Sí, solo para hombres.", correct: false}, {text: "No, el ejército es profesional.", correct: true}] },
+                    { type: 'checkbox', question: "Los ciudadanos españoles tienen derecho a acceder en condiciones de igualdad a las funciones y cargos públicos.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] },
+                    { type: 'checkbox', question: "La libertad ideológica y religiosa está garantizada en España.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] }
+                ]
+            },
+            { 
+                id: 3, title: "Organización territorial y geografía", icon: "map", 
+                theory: "El Estado se organiza territorialmente en municipios, en provincias y en las Comunidades Autónomas que se constituyan. Todas estas entidades gozan de autonomía para la gestión de sus respectivos intereses.", 
+                steps: [
+                    "**Comunidades:** 17 Comunidades Autónomas y 2 Ciudades Autónomas (Ceuta y Melilla en el norte de África).",
+                    "**Provincias:** Existen 50 provincias en España. Sus órganos de gobierno son las Diputaciones.",
+                    "**Municipios:** Gobernados por Ayuntamientos (Alcaldes y Concejales).",
+                    "**Geografía:** País muy montañoso (Teide, Mulhacén, Aneto). Ríos principales: Ebro, Duero, Tajo, Guadiana, Guadalquivir."
+                ],
+                proTip: "La norma institucional básica de cada Comunidad Autónoma se llama 'Estatuto de Autonomía'.",
+                showMap: true,
+                challenges: [
+                    // Existing 5 Questions
+                    { type: 'checkbox', question: "3004. ¿Cómo se llama la extensa llanura situada en el centro de la península ibérica?", options: [{text: "Meseta.", correct: true}, {text: "Cordillera.", correct: false}, {text: "Marisma.", correct: false}] },
+                    { type: 'checkbox', question: "3013. España se divide en...", options: [{text: "departamentos y regiones.", correct: false}, {text: "comunidades y ciudades autónomas.", correct: true}, {text: "regiones autónomas y distritos.", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["Estatuto de Autonomía", "Constitución", "Ayuntamiento"], parts: ["La ley más importante de cada comunidad autónoma es el ", {answer: "Estatuto de Autonomía"}, ", pero todos deben respetar la ", {answer: "Constitución"}, "."] },
+                    { type: 'checkbox', question: "3022. ¿En qué comunidad autónoma se encuentra la ciudad de Sevilla?", options: [{text: "Extremadura.", correct: false}, {text: "Andalucía.", correct: true}, {text: "Murcia.", correct: false}] },
+                    { type: 'dropdown', parts: ["Las islas Canarias y las islas ", {options: ["Cíes", "Baleares", "Chafarinas"], answer: "Baleares"}, " son los dos archipiélagos principales de España."] },
+                    
+                    // 10 New Official-style Questions
+                    { type: 'checkbox', question: "¿Qué comunidad autónoma está formada por Alicante, Castellón y Valencia?", options: [{text: "Principado de Asturias.", correct: false}, {text: "Andalucía.", correct: false}, {text: "Comunidad Valenciana.", correct: true}] },
+                    { type: 'checkbox', question: "El río principal que desemboca en el mar Mediterráneo es el...", options: [{text: "Tajo.", correct: false}, {text: "Duero.", correct: false}, {text: "Ebro.", correct: true}] },
+                    { type: 'checkbox', question: "¿En el norte de África están las ciudades de Melilla y...?", options: [{text: "Ceuta.", correct: true}, {text: "Cádiz.", correct: false}, {text: "Algeciras.", correct: false}] },
+                    { type: 'dropdown', parts: ["La capital de la comunidad autónoma de Galicia es ", {options: ["A Coruña", "Vigo", "Santiago de Compostela"], answer: "Santiago de Compostela"}, "."] },
+                    { type: 'checkbox', question: "El clima de las islas Canarias se considera...", options: [{text: "mediterráneo.", correct: false}, {text: "oceánico.", correct: false}, {text: "subtropical.", correct: true}] },
+                    { type: 'checkbox', question: "¿Dónde está situado el monte Aneto, el más alto de los Pirineos?", options: [{text: "En Aragón.", correct: true}, {text: "En Cataluña.", correct: false}, {text: "En Navarra.", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["Tajo", "Guadalquivir", "Ebro"], parts: ["El río ", {answer: "Guadalquivir"}, " pasa por Sevilla y Córdoba, y el río ", {answer: "Tajo"}, " pasa por Toledo."] },
+                    { type: 'checkbox', question: "¿Cuál de estas provincias forma parte de la Comunidad de Castilla y León?", options: [{text: "Burgos.", correct: true}, {text: "Huesca.", correct: false}, {text: "Guadalajara.", correct: false}] },
+                    { type: 'checkbox', question: "¿Quiénes forman parte del órgano ejecutivo de las Comunidades Autónomas?", options: [{text: "El presidente y los ministros.", correct: false}, {text: "El alcalde y los concejales.", correct: false}, {text: "El presidente y los consejeros.", correct: true}] },
+                    { type: 'checkbox', question: "El pico más alto de España, el Teide, se encuentra en...", options: [{text: "Canarias.", correct: true}, {text: "Andalucía.", correct: false}, {text: "Aragón.", correct: false}] }
+                ]
+            },
+            { 
+                id: 4, title: "Cultura e historia de España", icon: "palette", 
+                theory: "España posee una rica tradición cultural y un patrimonio histórico inmenso. El Siglo de Oro (s. XVI-XVII) y la Edad de Plata (principios s. XX) son cumbres literarias. Además, es el tercer país del mundo con más bienes declarados Patrimonio de la Humanidad.", 
+                steps: [
+                    "**Literatura:** Miguel de Cervantes (Don Quijote), Federico García Lorca, Premios Nobel como Camilo José Cela o Vicente Aleixandre.",
+                    "**Pintura:** Velázquez (Las Meninas), Goya (Los fusilamientos), Picasso (Guernica), Dalí.",
+                    "**Historia Reciente:** Transición democrática (1975-1982), referéndum constitucional (1978), ingreso en la Comunidad Económica Europea (1986).",
+                    "**Fiestas:** Los sanfermines (Pamplona), Las Fallas (Valencia), La Tomatina (Buñol), Sant Jordi (Cataluña)."
+                ],
+                proTip: "Además del castellano, son cooficiales en sus territorios: el catalán, el gallego, el euskera y el valenciano.",
+                showMap: false,
+                challenges: [
+                    // Existing 5 Questions
+                    { type: 'checkbox', question: "4001. Los personajes principales de la novela el Quijote son don Quijote y...", options: [{text: "Sancho Panza.", correct: true}, {text: "Don Juan.", correct: false}, {text: "Doña Inés.", correct: false}] },
+                    { type: 'checkbox', question: "4026. ¿En qué museo español puedes ver el cuadro Guernica de Picasso?", options: [{text: "Museo del Prado.", correct: false}, {text: "Museo Reina Sofía.", correct: true}, {text: "Museo Thyssen-Bornemisza.", correct: false}] },
+                    { type: 'checkbox', question: "4029. El 6 de diciembre se celebra en España...", options: [{text: "el Día de la Constitución.", correct: true}, {text: "la llegada de Colón a América.", correct: false}, {text: "el Día del Libro.", correct: false}] },
+                    { type: 'dropdown', parts: ["Las Fallas, unas de las fiestas más conocidas de España, se celebran en ", {options: ["Sevilla", "Pamplona", "Valencia"], answer: "Valencia"}, "."] },
+                    { type: 'dragdrop', wordBank: ["Velázquez", "Goya", "Dalí"], parts: ["El cuadro 'Las Meninas' fue pintado por ", {answer: "Velázquez"}, " y los 'Fusilamientos del 3 de mayo' por ", {answer: "Goya"}, "."] },
+                    
+                    // 10 New Official-style Questions
+                    { type: 'checkbox', question: "¿Qué fiesta se celebra en Pamplona en el mes de julio, famosa por sus encierros?", options: [{text: "La Feria de Abril.", correct: false}, {text: "Los Sanfermines.", correct: true}, {text: "La Tomatina.", correct: false}] },
+                    { type: 'checkbox', question: "¿Qué premio literario, el más importante de las letras hispánicas, lleva el nombre del autor de El Quijote?", options: [{text: "Premio Planeta.", correct: false}, {text: "Premio Cervantes.", correct: true}, {text: "Premio Nadal.", correct: false}] },
+                    { type: 'dropdown', parts: ["El Camino de ", {options: ["Santiago", "El Rocío", "La Plata"], answer: "Santiago"}, " es una ruta de peregrinación que finaliza en Galicia."] },
+                    { type: 'checkbox', question: "¿En qué año ingresó España en la Comunidad Económica Europea (actual UE)?", options: [{text: "1978", correct: false}, {text: "1986", correct: true}, {text: "1992", correct: false}] },
+                    { type: 'checkbox', question: "¿Cuál es la profesión de Penélope Cruz?", options: [{text: "Cantante.", correct: false}, {text: "Actriz.", correct: true}, {text: "Directora de cine.", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["Gallego", "Vasco", "Catalán"], parts: ["El euskera también se conoce como ", {answer: "Vasco"}, " y se habla principalmente en el País Vasco y Navarra."] },
+                    { type: 'checkbox', question: "¿Qué acontecimiento histórico importante se produjo en España en 1992?", options: [{text: "La Expo de Sevilla y los Juegos Olímpicos de Barcelona.", correct: true}, {text: "La muerte de Francisco Franco.", correct: false}, {text: "La proclamación de la Constitución.", correct: false}] },
+                    { type: 'checkbox', question: "El arquitecto Antoni Gaudí es especialmente conocido por sus obras en la ciudad de...", options: [{text: "Madrid.", correct: false}, {text: "Barcelona.", correct: true}, {text: "Sevilla.", correct: false}] },
+                    { type: 'checkbox', question: "¿En qué museo madrileño se puede ver el cuadro 'Las Meninas'?", options: [{text: "Museo del Prado.", correct: true}, {text: "Museo Reina Sofía.", correct: false}, {text: "Museo Guggenheim.", correct: false}] },
+                    { type: 'checkbox', question: "La famosa fiesta de la 'Tomatina' donde la gente se lanza tomates, se celebra en...", options: [{text: "Buñol (Valencia).", correct: true}, {text: "Sanlúcar de Barrameda.", correct: false}, {text: "Vitoria.", correct: false}] }
+                ]
+            },
+            { 
+                id: 5, title: "Sociedad y trámites", icon: "users", 
+                theory: "La vida diaria en España está marcada por sus propios horarios, su rica gastronomía mediterránea y una serie de trámites administrativos fundamentales para nacionales y residentes.", 
+                steps: [
+                    "**DNI y Pasaporte:** El Documento Nacional de Identidad es obligatorio desde los 14 años. Se tramita en las Comisarías de Policía.",
+                    "**Empadronamiento:** Documento que acredita el domicilio. Se tramita en el Ayuntamiento.",
+                    "**Gastronomía:** Platos típicos como paella, tortilla de patatas, gazpacho. Cultura del 'aperitivo' o tapas.",
+                    "**Horarios:** Comida fuerte entre las 14:00-15:30 y cena entre las 21:00-22:00. El comercio suele abrir de 10:00 a 20:00."
+                ],
+                proTip: "La mayoría de trámites con la Administración se pueden hacer online mediante el Portal de Administración Electrónica (PAe) usando Certificado Digital o Cl@ve.",
+                showMap: false,
+                challenges: [
+                    // Existing 5 Questions
+                    { type: 'dropdown', parts: ["Para registrarte como residente de un municipio debes obtener el ", {options: ["DNI", "Certificado de Empadronamiento", "Pasaporte"], answer: "Certificado de Empadronamiento"}, " acudiendo al ", {options: ["Ayuntamiento", "Ministerio del Interior", "Centro de Salud"], answer: "Ayuntamiento"}, "."] },
+                    { type: 'checkbox', question: "El Documento Nacional de Identidad (DNI) es obligatorio para los españoles a partir de los...", options: [{text: "14 años.", correct: true}, {text: "16 años.", correct: false}, {text: "18 años.", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["Policía", "Seguridad Social", "Ayuntamiento"], parts: ["El DNI se hace en la Comisaría de ", {answer: "Policía"}, ", el empadronamiento en el ", {answer: "Ayuntamiento"}, ", y el número de cotización en la ", {answer: "Seguridad Social"}, "."] },
+                    { type: 'checkbox', question: "¿Qué comida se suele tomar en España entre las 14:00 y las 15:30 horas?", options: [{text: "La cena.", correct: false}, {text: "La comida o almuerzo.", correct: true}, {text: "El desayuno.", correct: false}] },
+                    { type: 'dropdown', parts: ["Si tienes una emergencia médica o policial en España, debes llamar al número ", {options: ["091", "112", "060"], answer: "112"}, "."] },
+                    
+                    // 10 New Official-style Questions
+                    { type: 'checkbox', question: "¿Qué familia se considera 'familia numerosa' en España de forma general?", options: [{text: "Una pareja con 1 hijo.", correct: false}, {text: "Una pareja con 2 hijos.", correct: false}, {text: "Una pareja con 3 hijos.", correct: true}] },
+                    { type: 'checkbox', question: "La baja por maternidad en España, de forma general por un solo hijo, puede durar hasta...", options: [{text: "10 semanas.", correct: false}, {text: "16 semanas.", correct: true}, {text: "20 semanas.", correct: false}] },
+                    { type: 'dropdown', parts: ["Si compramos una botella de agua de 750 ml, estamos comprando una botella de ", {options: ["3/4 de litro.", "1/2 litro.", "1 litro."], answer: "3/4 de litro."}, "."] },
+                    { type: 'checkbox', question: "¿Cómo se llama el programa de noticias de la televisión que se emite habitualmente en directo a las 15:00 y a las 21:00 horas?", options: [{text: "Informativo o Telediario.", correct: true}, {text: "Documental.", correct: false}, {text: "Tertulia.", correct: false}] },
+                    { type: 'checkbox', question: "Para renovar el DNI o el Pasaporte es necesario solicitar...", options: [{text: "cita previa.", correct: true}, {text: "permiso de residencia.", correct: false}, {text: "certificado médico.", correct: false}] },
+                    { type: 'dragdrop', wordBank: ["IVA", "IRPF", "IBI"], parts: ["El impuesto sobre el Valor Añadido que pagamos al comprar la mayoría de los productos se llama ", {answer: "IVA"}, "."] },
+                    { type: 'checkbox', question: "¿Cuál de estos productos exporta España en grandes cantidades?", options: [{text: "Café.", correct: false}, {text: "Gas natural.", correct: false}, {text: "Frutas y hortalizas (como aceite de oliva o cítricos).", correct: true}] },
+                    { type: 'checkbox', question: "La tarjeta sanitaria europea sirve para recibir atención médica durante estancias temporales en países de la UE.", options: [{text: "Verdadero", correct: true}, {text: "Falso", correct: false}] },
+                    { type: 'checkbox', question: "En España, las farmacias que abren las 24 horas y los fines de semana se llaman farmacias...", options: [{text: "de urgencia.", correct: false}, {text: "de guardia.", correct: true}, {text: "permanentes.", correct: false}] },
+                    { type: 'checkbox', question: "El roscón de Reyes es un dulce típico que se come en España...", options: [{text: "en Semana Santa.", correct: false}, {text: "el 6 de enero.", correct: true}, {text: "en Nochebuena.", correct: false}] }
+                ]
+            }
+        ];
+
+        // Spain Map Coordinates (Approximate % for pinpointing autonomous communities on the blank SVG map)
+        const spainRegions = [
+            { id: "galicia", name: "Galicia", x: 17, y: 18 },
+            { id: "asturias", name: "Principado de Asturias", x: 33, y: 13 },
+            { id: "cantabria", name: "Cantabria", x: 49, y: 14 },
+            { id: "pais_vasco", name: "País Vasco", x: 60, y: 16 },
+            { id: "navarra", name: "Comunidad Foral de Navarra", x: 67, y: 20 },
+            { id: "aragon", name: "Aragón", x: 70, y: 32 },
+            { id: "cataluna", name: "Cataluña", x: 86, y: 30 },
+            { id: "castilla_leon", name: "Castilla y León", x: 42, y: 35 },
+            { id: "madrid", name: "Comunidad de Madrid", x: 52, y: 47 },
+            { id: "extremadura", name: "Extremadura", x: 31, y: 62 },
+            { id: "castilla_la_mancha", name: "Castilla-La Mancha", x: 55, y: 60 },
+            { id: "comunidad_valenciana", name: "Comunidad Valenciana", x: 74, y: 55 },
+            { id: "murcia", name: "Región de Murcia", x: 68, y: 73 },
+            { id: "andalucia", name: "Andalucía", x: 42, y: 80 },
+            { id: "baleares", name: "Islas Baleares", x: 92, y: 55 },
+            { id: "canarias", name: "Canarias", x: 15, y: 92 }
+        ];
+
+        let state = {
+            moduleId: 1, completed: [], sidebarOpen: false, draggedWord: null,
+            map: { queue: [], currentIndex: 0, score: 0 }
+        };
+
+        const els = {
+            sidebar: document.getElementById('sidebar'), mobileMenuBtn: document.getElementById('mobile-menu-btn'),
+            menuIcon: document.getElementById('menu-icon'), navList: document.getElementById('sidebar-nav-list'),
+            progressPercentage: document.getElementById('progress-percentage'), progressBarFill: document.getElementById('progress-bar-fill'),
+            moduleLabel: document.getElementById('module-label'), moduleTitle: document.getElementById('module-title'),
+            moduleTheory: document.getElementById('module-theory'),
+            stepsContainer: document.getElementById('steps-container'), moduleSteps: document.getElementById('module-steps'),
+            proTipContainer: document.getElementById('pro-tip-container'), moduleProTip: document.getElementById('module-pro-tip'),
+            mistakesContainer: document.getElementById('mistakes-container'), moduleMistakes: document.getElementById('module-mistakes'),
+            exContainer: document.getElementById('exercise-container'),
+            completeBtn: document.getElementById('complete-btn'), completeText: document.getElementById('complete-text'), completeIcon: document.getElementById('complete-icon'),
+            btnPrev: document.getElementById('btn-prev'), btnNext: document.getElementById('btn-next'),
+            // Map
+            mapContainer: document.getElementById('map-container'), mapPinsLayer: document.getElementById('map-pins-layer'),
+            mapTargetName: document.getElementById('map-target-name'), mapScore: document.getElementById('map-score'),
+            mapFeedback: document.getElementById('map-feedback'), btnResetMap: document.getElementById('btn-reset-map')
+        };
+
+        function init() {
+            setupListeners();
+            render();
+        }
+
+        function render() {
+            let activeModule = modulesData.find(m => m.id === state.moduleId);
+            
+            // Text Content
+            els.moduleLabel.textContent = `Módulo ${activeModule.id}`;
+            els.moduleTitle.textContent = activeModule.title;
+            els.moduleTheory.textContent = activeModule.theory;
+            
+            // Steps
+            if (activeModule.steps && activeModule.steps.length > 0) {
+                els.stepsContainer.classList.remove('hidden');
+                els.moduleSteps.innerHTML = activeModule.steps.map((step, idx) => `
+                    <li class="flex gap-4">
+                        <div class="flex-shrink-0 w-7 h-7 rounded-full bg-zinc-800 text-zinc-300 text-xs font-medium flex items-center justify-center border border-zinc-700">${idx + 1}</div>
+                        <div class="pt-1">${step.replace(/\*\*(.*?)\*\*/g, '<strong class="text-zinc-100">$1</strong>')}</div>
+                    </li>`).join('');
+            } else { els.stepsContainer.classList.add('hidden'); }
+
+            // Pro Tip / Mistakes
+            if(activeModule.proTip) { els.proTipContainer.classList.remove('hidden'); els.moduleProTip.textContent = activeModule.proTip; } else { els.proTipContainer.classList.add('hidden'); }
+            if(activeModule.mistakes) { els.mistakesContainer.classList.remove('hidden'); els.moduleMistakes.textContent = activeModule.mistakes; } else { els.mistakesContainer.classList.add('hidden'); }
+
+            // Progress
+            const progress = Math.round((state.completed.length / modulesData.length) * 100);
+            els.progressPercentage.textContent = `${Math.min(progress, 100)}%`; els.progressBarFill.style.width = `${Math.min(progress, 100)}%`;
+            
+            const isCompleted = state.completed.includes(state.moduleId);
+            els.completeBtn.className = isCompleted ? "px-6 py-2.5 rounded-lg flex items-center gap-2.5 text-sm font-medium transition-colors bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "px-6 py-2.5 rounded-lg flex items-center gap-2.5 text-sm font-medium transition-colors bg-red-600 text-white hover:bg-red-500 shadow-sm";
+            els.completeIcon.className = isCompleted ? "w-4 h-4 text-emerald-400" : "w-4 h-4 text-white";
+            els.completeText.textContent = isCompleted ? "Módulo Completado" : "Marcar Módulo como Completado";
+            
+            // Pagination
+            els.btnPrev.disabled = state.moduleId === 1; els.btnNext.disabled = state.moduleId === modulesData.length;
+            
+            // Sidebar Mobile
+            if (state.sidebarOpen) { els.sidebar.classList.remove('-translate-x-full'); els.menuIcon.setAttribute('data-lucide', 'x'); } else { els.sidebar.classList.add('-translate-x-full'); els.menuIcon.setAttribute('data-lucide', 'menu'); }
+
+            renderSidebarList();
+            renderExercises(activeModule);
+            
+            // Map Module specific
+            if (activeModule.showMap) {
+                els.mapContainer.classList.remove('hidden');
+                initMapGame();
+            } else {
+                els.mapContainer.classList.add('hidden');
+            }
+
+            lucide.createIcons();
+        }
+
+        function renderSidebarList() {
+            let html = '';
+            modulesData.forEach(m => {
+                const isActive = state.moduleId === m.id;
+                const isCompleted = state.completed.includes(m.id);
+                const btnClass = isActive ? 'bg-zinc-800 text-red-400 border-l-2 border-red-500 shadow-sm pl-2' : 'text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200 border-l-2 border-transparent pl-2';
+                const iconClass = isActive ? 'text-red-500' : 'text-zinc-500 group-hover:text-zinc-300';
+                html += `
+                    <button data-id="${m.id}" class="w-full text-left px-3 py-3 rounded-r-lg flex items-center justify-between transition-all duration-200 group ${btnClass}">
+                        <span class="flex items-center gap-3"><i data-lucide="${m.icon}" class="w-[18px] h-[18px] ${iconClass}"></i><span class="text-sm font-medium pr-2">M${m.id}: ${m.title.substring(0, 20)}...</span></span>
+                        ${isCompleted ? '<i data-lucide="check" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>' : ''}
+                    </button>`;
+            });
+            els.navList.innerHTML = html;
+        }
+
+        // --- EXERCISE ENGINE ---
+        function renderExercises(module) {
+            const container = els.exContainer;
+            if (!module.challenges || module.challenges.length === 0) { 
+                container.classList.add('hidden'); container.innerHTML = ''; return; 
+            }
+            container.classList.remove('hidden');
+
+            let html = `<h3 class="text-xs font-medium text-zinc-500 tracking-widest uppercase mb-6 flex items-center gap-2">
+                            <i data-lucide="check-square" class="w-4 h-4 text-zinc-500"></i> PRÁCTICA DE EXAMEN
+                         </h3><div class="space-y-8">`;
+                
+            module.challenges.forEach((q, qIndex) => {
+                // Render Word Bank for Drag/Drop
+                if (q.type === 'dragdrop' && q.wordBank) {
+                    html += `
+                        <div class="border border-dashed border-zinc-700/60 rounded-xl p-4 mb-4 text-center bg-zinc-900/30">
+                            <p class="text-xs font-medium tracking-widest text-zinc-500 uppercase mb-3 flex items-center justify-center gap-2">
+                                <i data-lucide="grip-horizontal" class="w-4 h-4"></i> PALABRAS (ARRASTRE A LOS HUECOS)
+                            </p>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                ${q.wordBank.map(word => `<div draggable="true" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)" data-word="${word}" class="word-pill border border-zinc-700 bg-zinc-800 text-zinc-300 font-medium text-sm px-3 py-1.5 rounded-md shadow-sm select-none">${word}</div>`).join('')}
+                            </div>
+                        </div>`;
+                }
+
+                html += `<div class="flex gap-4 quiz-question-block">
+                            <div class="w-7 h-7 rounded-full bg-zinc-800 text-zinc-400 font-medium text-xs flex items-center justify-center flex-shrink-0 mt-0.5 border border-zinc-700/50">
+                                ${qIndex + 1}
+                            </div>
+                            <div class="flex-1">`;
+                    
+                if (q.type === 'checkbox') {
+                    const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+                    html += `<p class="text-[1.05rem] text-zinc-200 font-medium mb-4 leading-snug">${q.question}</p>
+                                <div class="options-container space-y-2">
+                                    ${shuffledOptions.map((opt, oIndex) => `
+                                        <label class="flex items-start gap-3 cursor-pointer group p-3 rounded-lg border border-transparent hover:bg-zinc-900/40 transition-all">
+                                            <input type="radio" name="quiz-${module.id}-${qIndex}" value="${opt.correct}" class="hidden peer" onchange="handleQuizAnswer(this)" />
+                                            <div class="w-5 h-5 rounded-full border border-zinc-600 flex items-center justify-center mt-0.5 transition-colors flex-shrink-0 text-transparent peer-checked:bg-red-500 peer-checked:border-red-500 peer-checked:text-white">
+                                                <div class="w-2 h-2 rounded-full bg-current"></div>
+                                            </div>
+                                            <span class="text-zinc-400 group-hover:text-zinc-300 peer-checked:text-zinc-100 transition-colors leading-snug select-none">${opt.text}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>`;
+                } 
+                else if (q.type === 'dropdown' || q.type === 'dragdrop') {
+                    html += `<p class="text-[1.05rem] text-zinc-200 font-medium leading-relaxed pt-0.5">`;
+                    q.parts.forEach(part => {
+                        if (typeof part === 'string') { html += part; } 
+                        else if (q.type === 'dropdown') {
+                            html += `<select class="inline-select" onchange="handleDropdownAnswer(this, '${part.answer}')">
+                                        <option value="" disabled selected>...</option>
+                                        ${part.options.map(o => `<option value="${o}">${o}</option>`).join('')}
+                                        </select>`;
+                        } 
+                        else if (q.type === 'dragdrop') {
+                            html += `<span class="inline-blank" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, '${part.answer}')">...</span>`;
+                        }
+                    });
+                    html += `</p>`;
+                }
+
+                html += `</div></div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // --- MAP GAME ENGINE ---
+        function initMapGame() {
+            // Shuffle regions
+            state.map.queue = [...spainRegions].sort(() => Math.random() - 0.5);
+            state.map.currentIndex = 0;
+            state.map.score = 0;
+            els.mapScore.textContent = "0";
+            els.mapFeedback.textContent = "";
+            els.mapFeedback.className = "mt-4 text-sm font-medium h-6 text-center";
+            els.btnResetMap.classList.add('hidden');
+
+            renderMapPins();
+            updateMapTarget();
+        }
+
+        function renderMapPins() {
+            els.mapPinsLayer.innerHTML = '';
+            spainRegions.forEach(region => {
+                const pin = document.createElement('div');
+                pin.className = 'map-pin';
+                pin.style.left = `${region.x}%`;
+                pin.style.top = `${region.y}%`;
+                pin.dataset.id = region.id;
+                
+                const label = document.createElement('div');
+                label.className = 'community-label';
+                label.textContent = region.name;
+                
+                pin.appendChild(label);
+                pin.addEventListener('click', () => handleMapClick(region.id, pin));
+                els.mapPinsLayer.appendChild(pin);
+            });
+        }
+
+        function updateMapTarget() {
+            if (state.map.currentIndex < state.map.queue.length) {
+                const target = state.map.queue[state.map.currentIndex];
+                els.mapTargetName.textContent = target.name;
+                
+                // Remove active class from all, add to target to guide slightly if wanted (We will keep it hidden to test knowledge)
+                // If you want to make it easy (show the pulse), uncomment below:
+                /* document.querySelectorAll('.map-pin').forEach(p => p.classList.remove('active-target'));
+                const targetPin = document.querySelector(`.map-pin[data-id="${target.id}"]`);
+                if(targetPin) targetPin.classList.add('active-target'); */
+            } else {
+                els.mapTargetName.textContent = "¡Completado!";
+                els.mapFeedback.textContent = "¡Excelente! Has localizado todas las comunidades.";
+                els.mapFeedback.className = "mt-4 text-sm font-medium h-6 text-center text-emerald-400";
+                els.btnResetMap.classList.remove('hidden');
+            }
+        }
+
+        function handleMapClick(clickedId, pinElement) {
+            if (state.map.currentIndex >= state.map.queue.length) return; // Game over
+            if (pinElement.classList.contains('found')) return; // Already found
+            
+            const target = state.map.queue[state.map.currentIndex];
+            
+            if (clickedId === target.id) {
+                // Correct
+                pinElement.classList.add('found');
+                state.map.score++;
+                els.mapScore.textContent = state.map.score;
+                els.mapFeedback.textContent = "¡Correcto!";
+                els.mapFeedback.className = "mt-4 text-sm font-medium h-6 text-center text-emerald-400";
+                
+                state.map.currentIndex++;
+                updateMapTarget();
+            } else {
+                // Incorrect
+                pinElement.classList.add('error');
+                els.mapFeedback.textContent = "Esa no es la comunidad correcta. Inténtalo de nuevo.";
+                els.mapFeedback.className = "mt-4 text-sm font-medium h-6 text-center text-red-400";
+                setTimeout(() => pinElement.classList.remove('error'), 400);
+            }
+        }
+
+        // --- GLOBAL EXERCISE HANDLERS ---
+        window.handleQuizAnswer = function(input) {
+            const label = input.closest('label');
+            const questionBlock = input.closest('.quiz-question-block');
+            
+            const allLabels = questionBlock.querySelectorAll('label');
+            allLabels.forEach(l => l.classList.remove('bg-zinc-800/50', 'border-zinc-700/50'));
+            label.classList.add('bg-zinc-800/50', 'border-zinc-700/50');
+
+            let feedbackEl = questionBlock.querySelector('.quiz-feedback');
+            if (!feedbackEl) {
+                feedbackEl = document.createElement('div');
+                questionBlock.querySelector('.options-container').appendChild(feedbackEl);
+            }
+
+            if (input.value === 'true') {
+                feedbackEl.className = 'quiz-feedback mt-4 text-sm font-medium flex items-center gap-2 text-emerald-400 bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20';
+                feedbackEl.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> <span>¡Correcto!</span>`;
+            } else {
+                feedbackEl.className = 'quiz-feedback mt-4 text-sm font-medium flex items-center gap-2 text-red-400 bg-red-500/10 p-3 rounded-lg border border-red-500/20';
+                feedbackEl.innerHTML = `<i data-lucide="x-circle" class="w-4 h-4"></i> <span>Respuesta incorrecta</span>`;
+            }
+            lucide.createIcons();
+        };
+
+        window.handleDropdownAnswer = function(select, answerStr) {
+            if (select.value === answerStr) { select.className = "inline-select success"; } else { select.className = "inline-select error"; setTimeout(() => { select.className = "inline-select"; select.value = ""; }, 800); }
+        };
+
+        window.handleDragStart = function(e) { state.draggedWord = e.target.dataset.word; e.target.classList.add('dragging'); };
+        window.handleDragEnd = function(e) { e.target.classList.remove('dragging'); state.draggedWord = null; };
+        window.handleDragOver = function(e) { e.preventDefault(); if(!e.target.classList.contains('success')) e.target.classList.add('drag-over'); };
+        window.handleDragLeave = function(e) { e.target.classList.remove('drag-over'); };
+        window.handleDrop = function(e, expectedAnswer) {
+            e.preventDefault(); e.target.classList.remove('drag-over');
+            if (!state.draggedWord) return;
+            if (state.draggedWord === expectedAnswer) { e.target.textContent = state.draggedWord; e.target.className = "inline-blank success"; } 
+            else { e.target.classList.add('error'); setTimeout(() => e.target.classList.remove('error'), 400); }
+        };
+
+        function setupListeners() {
+            els.mobileMenuBtn.addEventListener('click', () => { state.sidebarOpen = !state.sidebarOpen; render(); });
+            els.navList.addEventListener('click', (e) => { const btn = e.target.closest('button[data-id]'); if (btn) { state.moduleId = parseInt(btn.dataset.id); state.sidebarOpen = false; render(); } });
+            els.btnPrev.addEventListener('click', () => { if (state.moduleId > 1) { state.moduleId--; render(); } });
+            els.btnNext.addEventListener('click', () => { if (state.moduleId < modulesData.length) { state.moduleId++; render(); } });
+            els.completeBtn.addEventListener('click', () => { if (state.completed.includes(state.moduleId)) { state.completed = state.completed.filter(w => w !== state.moduleId); } else { state.completed.push(state.moduleId); } render(); });
+            els.btnResetMap.addEventListener('click', () => initMapGame());
+        }
+
+        // Run
+        init();
+
+    </script>
+</body>
+</html>
