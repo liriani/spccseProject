@@ -7,6 +7,8 @@ type Challenge =
   | { type: 'dropdown'; parts: (string | { options: string[]; answer: string })[]; explanation?: string }
   | { type: 'dragdrop'; wordBank: string[]; parts: (string | { answer: string })[]; explanation?: string }
   | { type: 'map_pin'; targetId: string; targetName: string; explanation?: string }
+  | { type: 'matching'; prompt: string; pairs: { left: string; right: string }[]; wrongHint?: string; explanation?: string }
+  | { type: 'visual_scenario'; scene: { emoji: string; title: string; setting: string; stageBg: string; bgEmojis: string[]; dropZoneLabel: string; successEmoji: string; successText: string }; answer: string; distractors: string[]; wrongHint?: string; explanation?: string }
 
 interface Step {
   title: string
@@ -508,12 +510,12 @@ const MODULES: Mod[] = [
     heroImage: 'https://images.unsplash.com/photo-1533854257392-71c5ff28dff7?w=900&h=350&fit=crop&auto=format',
     theory: `<p style="font-size:0.82rem;color:#1A1A2E;line-height:1.6;margin:0 0 0.75rem 0">España es el ${_badge('3er país con más Patrimonio UNESCO', 206, 130, 255)}, con siglos de historia que mezclan culturas cristiana, judía y musulmana.</p>${_h('Patrimonio Cultural')}${_grid(`${_card(ICO_BOOKOPEN, '#CE82FF', 'Literatura', 'Cervantes (Don Quijote), Lope de Vega, García Lorca, Juan Ramón Jiménez (Nobel 1956), Camilo José Cela (Nobel 1989).')}${_card(ICO_PALETTE, '#CE82FF', 'Arte', 'Velázquez (Las Meninas), Goya, Picasso (Guernica), Dalí y Miró — maestros universales.')}${_card(ICO_MUSIC, '#CE82FF', 'Música y Cine', 'Flamenco (Patrimonio UNESCO), zarzuela, y el cine de Pedro Almodóvar.')}`)}<div style="margin-top:0.75rem">${_bar(ICO_GLOBE, '#CE82FF', `<strong>Lenguas de España:</strong> El castellano es oficial en todo el territorio. También son cooficiales: ${_badge('catalán', 206, 130, 255)}, ${_badge('valenciano', 206, 130, 255)}, ${_badge('gallego', 206, 130, 255)} y ${_badge('euskera', 206, 130, 255)}.`)}</div>${_h('Cronología Histórica')}<div style="display:flex;flex-direction:column;gap:0.4rem">${_li(ICO_CLOCK, '#CE82FF', '<strong>711–1492</strong> — <em>Al-Ándalus</em>: convivencia de las tres culturas en la Edad Media.')}${_li(ICO_CLOCK, '#CE82FF', '<strong>1492</strong> — Colón llega a América y termina la Reconquista (caída de Granada).')}${_li(ICO_CLOCK, '#CE82FF', '<strong>Siglos XVI–XVII</strong> — <em>Siglo de Oro</em>: cumbre literaria y artística.')}${_li(ICO_CHECK, '#CE82FF', '<strong>1986</strong> — España entra en la Unión Europea.')}</div>`,
     steps: [
-      { title: 'Literatura', summary: 'Cervantes, Lorca y dos Premios Nobel: Cela (1989) y Aleixandre (1977).', detail: 'Miguel de Cervantes escribió Don Quijote de la Mancha (1605 y 1615), considerada la primera novela moderna y la obra más traducida después de la Biblia. Federico García Lorca fue poeta y dramaturgo (La Casa de Bernarda Alba). Los Premios Nobel de Literatura españoles: Vicente Aleixandre (1977) y Camilo José Cela (1989). También destacan Mercè Rodoreda, que escribía en catalán.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Congreso_de_los_Diputados_%28Madrid%29_02.jpg/640px-Congreso_de_los_Diputados_%28Madrid%29_02.jpg' },
-      { title: 'Pintura', summary: 'Velázquez (Prado), Goya (Prado), Picasso (Reina Sofía) y Dalí.', detail: 'Diego Velázquez (1599–1660) pintó Las Meninas (1656), conservada en el Museo del Prado. Francisco de Goya (1746–1828) pintó Los fusilamientos del 3 de mayo, también en el Prado. Pablo Picasso pintó el Guernica (1937) como protesta al bombardeo de la ciudad vasca; hoy en el Museo Reina Sofía de Madrid. Salvador Dalí fundó el surrealismo español.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Tribunal_Constitucional_de_Espa%C3%B1a.jpg/640px-Tribunal_Constitucional_de_Espa%C3%B1a.jpg' },
-      { title: 'Fiestas Populares', summary: 'Fallas (Valencia, UNESCO), Sanfermines (Pamplona) y Semana Santa.', detail: 'Las Fallas de Valencia (marzo, Patrimonio UNESCO 2016) son esculturas de madera y cartón que se queman la noche del 19 de marzo. Los Sanfermines (Pamplona, 6–14 de julio) son famosos por el encierro de toros. La Tomatina (Buñol, agosto) es la batalla de tomates más grande del mundo. La Semana Santa de Sevilla, Granada y Valladolid son Patrimonio de Interés Turístico.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Senado_de_Espa%C3%B1a_-_Fachada.jpg/640px-Senado_de_Espa%C3%B1a_-_Fachada.jpg' },
+      { title: 'Literatura', summary: 'Cervantes, Lorca y dos Premios Nobel: Cela (1989) y Aleixandre (1977).', detail: 'Miguel de Cervantes escribió Don Quijote de la Mancha (1605 y 1615), considerada la primera novela moderna y la obra más traducida después de la Biblia. Federico García Lorca fue poeta y dramaturgo (La Casa de Bernarda Alba). Los Premios Nobel de Literatura españoles: Vicente Aleixandre (1977) y Camilo José Cela (1989). También destacan Mercè Rodoreda, que escribía en catalán.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Cervantes_J%C3%A1uregui.jpg/480px-Cervantes_J%C3%A1uregui.jpg' },
+      { title: 'Pintura', summary: 'Velázquez (Prado), Goya (Prado), Picasso (Reina Sofía) y Dalí.', detail: 'Diego Velázquez (1599–1660) pintó Las Meninas (1656), conservada en el Museo del Prado. Francisco de Goya (1746–1828) pintó Los fusilamientos del 3 de mayo, también en el Prado. Pablo Picasso pintó el Guernica (1937) como protesta al bombardeo de la ciudad vasca; hoy en el Museo Reina Sofía de Madrid. Salvador Dalí fundó el surrealismo español.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg/480px-Las_Meninas%2C_by_Diego_Vel%C3%A1zquez%2C_from_Prado_in_Google_Earth.jpg' },
+      { title: 'Fiestas Populares', summary: 'Fallas (Valencia, UNESCO), Sanfermines (Pamplona) y Semana Santa.', detail: 'Las Fallas de Valencia (marzo, Patrimonio UNESCO 2016) son esculturas de madera y cartón que se queman la noche del 19 de marzo. Los Sanfermines (Pamplona, 6–14 de julio) son famosos por el encierro de toros. La Tomatina (Buñol, agosto) es la batalla de tomates más grande del mundo. La Semana Santa de Sevilla, Granada y Valladolid son Patrimonio de Interés Turístico.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Encierro_en_Pamplona_en_2007.jpg/640px-Encierro_en_Pamplona_en_2007.jpg' },
       { title: 'Historia Reciente', summary: 'Franquismo → Transición → Constitución 1978 → UE 1986 → año olímpico 1992.', detail: 'El franquismo (1939–1975) fue la dictadura de Francisco Franco tras la Guerra Civil. La Transición democrática (1975–1982) transformó España en una democracia parlamentaria con la Constitución de 1978 (aprobada por referéndum el 6 de diciembre, Día de la Constitución). En 1986 España entró en la CEE (actual UE). En 1992: Exposición Universal en Sevilla y Juegos Olímpicos en Barcelona.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg/640px-Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg' },
       { title: 'Lenguas de España', summary: 'Castellano (oficial en todo el país) + 4 lenguas cooficiales regionales.', detail: 'El castellano (español) es la única lengua oficial en todo el territorio nacional. También son cooficiales en sus comunidades: el catalán (Cataluña, Baleares), el valenciano (Comunidad Valenciana), el gallego (Galicia) y el euskera (País Vasco y parte de Navarra). El catalán, gallego y valenciano son lenguas romances; el euskera (vasco) es una lengua de origen desconocido, sin relación con las demás lenguas europeas.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Subdivisions_of_Spain_with_coats_of_arms.png/640px-Subdivisions_of_Spain_with_coats_of_arms.png' },
-      { title: 'Arquitectura', summary: 'Gaudí, la Alhambra (UNESCO) y la Sagrada Família, aún en construcción.', detail: 'Antoni Gaudí (1852–1926) diseñó la Sagrada Família en Barcelona (en construcción desde 1882, Patrimonio UNESCO) y el Park Güell. La Alhambra de Granada (siglo XIII, sultanato nazarí) es el monumento más visitado de España. La Catedral de Burgos (Patrimonio UNESCO) es obra maestra del gótico. El Museo Guggenheim Bilbao (1997, Frank Gehry) renovó la arquitectura contemporánea española.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Congreso_de_los_Diputados_%28Madrid%29_02.jpg/640px-Congreso_de_los_Diputados_%28Madrid%29_02.jpg' },
+      { title: 'Arquitectura', summary: 'Gaudí, la Alhambra (UNESCO) y la Sagrada Família, aún en construcción.', detail: 'Antoni Gaudí (1852–1926) diseñó la Sagrada Família en Barcelona (en construcción desde 1882, Patrimonio UNESCO) y el Park Güell. La Alhambra de Granada (siglo XIII, sultanato nazarí) es el monumento más visitado de España. La Catedral de Burgos (Patrimonio UNESCO) es obra maestra del gótico. El Museo Guggenheim Bilbao (1997, Frank Gehry) renovó la arquitectura contemporánea española.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Sagrada_Familia_01.jpg/480px-Sagrada_Familia_01.jpg' },
     ],
     proTip: 'El Guernica de Picasso está en el Museo Reina Sofía (Madrid). Las Meninas de Velázquez están en el Museo del Prado. El 12 de octubre es el Día de la Hispanidad (Fiesta Nacional) y el 23 de abril es el Día del Libro (Sant Jordi en Cataluña).',
     gifs: [
@@ -604,6 +606,107 @@ const MODULES: Mod[] = [
         question: '¿Qué fiesta se celebra en Pamplona en julio, famosa por sus encierros?',
         options: [{ text: 'La Feria de Abril.', correct: false }, { text: 'Los Sanfermines.', correct: true }, { text: 'La Tomatina.', correct: false }],
         explanation: 'Los Sanfermines se celebran en Pamplona del 6 al 14 de julio en honor a San Fermín, patrón de la ciudad. El acto más famoso es el encierro: los toros recorren las calles de la ciudad, seguidos por corredores. Fue popularizado internacionalmente por la novela "Fiesta" de Ernest Hemingway (1926).',
+      },
+      // ── Memory Association Exercises ──
+      {
+        type: 'matching',
+        prompt: '🎨 Conecta cada artista con su obra maestra',
+        pairs: [
+          { left: 'Cervantes', right: 'Don Quijote de la Mancha' },
+          { left: 'Velázquez', right: 'Las Meninas' },
+          { left: 'Goya', right: 'Los fusilamientos del 3 de mayo' },
+          { left: 'Picasso', right: 'Guernica' },
+        ],
+        wrongHint: 'Recuerda: Las Meninas y Los fusilamientos son cuadros pintados; el Don Quijote es una novela escrita; el Guernica es la denuncia de una guerra.',
+        explanation: 'Cervantes (s. XVII) escribió el Don Quijote, la primera novela moderna, considerada la obra cumbre de la lengua española. Velázquez y Goya son los grandes maestros del Prado (s. XVII–XVIII). Picasso pintó el Guernica en 1937 como protesta al bombardeo de la ciudad vasca; hoy está en el Museo Reina Sofía de Madrid.',
+      },
+      {
+        type: 'matching',
+        prompt: '🏛️ Conecta cada figura cultural con su época o movimiento',
+        pairs: [
+          { left: 'Cervantes', right: 'Siglo de Oro' },
+          { left: 'Gaudí', right: 'Modernismo' },
+          { left: 'García Lorca', right: 'Generación del 27' },
+          { left: 'Dalí', right: 'Surrealismo' },
+        ],
+        wrongHint: 'El Siglo de Oro es literatura del s. XVI–XVII (Cervantes, Lope). El Modernismo es arquitectura del s. XIX–XX (Gaudí). La Generación del 27 son poetas de entreguerras (Lorca). El Surrealismo es vanguardia de los años 20–30 (Dalí).',
+        explanation: 'El Siglo de Oro (ss. XVI–XVII) fue la cumbre literaria y artística de España: Cervantes, Lope de Vega, Quevedo. El Modernismo arquitectónico de Gaudí transformó Barcelona. La Generación del 27 fue un brillante grupo de poetas (Lorca, Alberti, Aleixandre). Dalí, junto con Buñuel y Miró, situó a España en la vanguardia surrealista internacional.',
+      },
+      {
+        type: 'matching',
+        prompt: '🗺️ Conecta cada figura con su ciudad o región de origen',
+        pairs: [
+          { left: 'Gaudí', right: 'Barcelona (Cataluña)' },
+          { left: 'García Lorca', right: 'Granada (Andalucía)' },
+          { left: 'Velázquez', right: 'Sevilla (Andalucía)' },
+          { left: 'Goya', right: 'Fuendetodos (Aragón)' },
+        ],
+        wrongHint: 'Gaudí vivió y trabajó en Barcelona toda su vida. Lorca nació y amó Granada. Velázquez se formó en Sevilla antes de ir a Madrid. Goya nació en el pequeño pueblo aragonés de Fuendetodos.',
+        explanation: 'Antoni Gaudí nació en Reus y desarrolló toda su obra en Barcelona. García Lorca nació en Fuente Vaqueros (Granada) y la Andalucía de su infancia impregna toda su poesía. Diego Velázquez nació en Sevilla, donde se formó antes de llegar a la corte de Madrid. Francisco de Goya nació en Fuendetodos, un pequeño pueblo de Aragón.',
+      },
+      {
+        type: 'matching',
+        prompt: '🎉 Conecta cada fiesta popular con su ciudad',
+        pairs: [
+          { left: 'Las Fallas', right: 'Valencia' },
+          { left: 'Los Sanfermines', right: 'Pamplona' },
+          { left: 'La Feria de Abril', right: 'Sevilla' },
+          { left: 'La Tomatina', right: 'Buñol' },
+        ],
+        wrongHint: 'Las Fallas son en Valencia (fuego). Los Sanfermines son en Pamplona (toros). La Feria de Abril es en Sevilla (flamenco). La Tomatina es en Buñol, un pueblo valenciano (tomates).',
+        explanation: 'Las Fallas (Valencia, marzo, UNESCO) queman esculturas de cartón el 19 de marzo. Los Sanfermines (Pamplona, 6–14 julio) incluyen el famoso encierro de toros. La Feria de Abril (Sevilla) es la gran fiesta andaluza, con trajes de flamenca y casetas. La Tomatina (Buñol, Valencia, último miércoles de agosto) es la mayor batalla de tomates del mundo.',
+      },
+      // ── Visual Scenario Challenges ──
+      {
+        type: 'visual_scenario',
+        scene: {
+          emoji: '🎭',
+          title: 'El Gran Teatro del Siglo de Oro',
+          setting: 'Un teatro del s. XVII rebosa de público. Las velas iluminan el escenario.',
+          stageBg: 'linear-gradient(160deg, #2d1b4e 0%, #1a0a2e 60%, #3d1f6e 100%)',
+          bgEmojis: ['🕯️', '🎭', '🎶', '👑', '🕯️'],
+          dropZoneLabel: 'Arrastra aquí al dramaturgo',
+          successEmoji: '✍️',
+          successText: '¡Correcto! Lope de Vega fue el mayor dramaturgo del Siglo de Oro español.',
+        },
+        answer: 'Lope de Vega',
+        distractors: ['Cervantes', 'Goya'],
+        wrongHint: 'El gran dramaturgo del teatro barroco español fue Lope de Vega, autor de más de 400 obras. Cervantes es el novelista del Don Quijote; Goya es el pintor aragonés.',
+        explanation: 'Lope de Vega (1562–1635) fue el creador del teatro nacional español, con obras como Fuente Ovejuna. Su contemporáneo Calderón de la Barca también brilló en este período llamado el Siglo de Oro.',
+      },
+      {
+        type: 'visual_scenario',
+        scene: {
+          emoji: '🖼️',
+          title: 'El Taller del Pintor Real',
+          setting: 'El Real Alcázar de Madrid, 1656. Un lienzo enorme espera al maestro.',
+          stageBg: 'linear-gradient(160deg, #3d2a1a 0%, #1a1008 60%, #5c3d22 100%)',
+          bgEmojis: ['🖌️', '🎨', '👸', '🐶', '🖼️'],
+          dropZoneLabel: 'Arrastra aquí al pintor de Las Meninas',
+          successEmoji: '🖌️',
+          successText: '¡Brillante! Velázquez pintó Las Meninas, la obra maestra del Prado.',
+        },
+        answer: 'Velázquez',
+        distractors: ['Goya', 'Dalí'],
+        wrongHint: 'Las Meninas (1656) es obra de Diego Velázquez, pintor de la corte de Felipe IV. Goya es del s. XVIII; Dalí es del s. XX.',
+        explanation: 'Diego Velázquez (1599–1660) es considerado el mayor pintor español. Las Meninas, expuesta en el Museo del Prado, retrata a la infanta Margarita rodeada de sus damas de honor, con el propio Velázquez visible en el lienzo.',
+      },
+      {
+        type: 'visual_scenario',
+        scene: {
+          emoji: '⚔️',
+          title: 'La Llanura de La Mancha',
+          setting: 'Un paisaje castellano seco y dorado. Molinos de viento giran en el horizonte.',
+          stageBg: 'linear-gradient(160deg, #7a5c00 0%, #4a3800 60%, #c49200 100%)',
+          bgEmojis: ['🌾', '⚔️', '🐴', '💨', '☀️'],
+          dropZoneLabel: 'Arrastra al autor del Ingenioso Hidalgo',
+          successEmoji: '📖',
+          successText: '¡Exacto! Cervantes creó a Don Quijote en esta tierra manchega.',
+        },
+        answer: 'Cervantes',
+        distractors: ['Lope de Vega', 'García Lorca'],
+        wrongHint: 'El Ingenioso Hidalgo Don Quijote de la Mancha fue escrito por Miguel de Cervantes. Lope de Vega escribía teatro; García Lorca es un poeta del s. XX.',
+        explanation: 'Miguel de Cervantes (1547–1616) publicó Don Quijote en dos partes (1605 y 1615). Ambientada en La Mancha, es considerada la primera novela moderna y la obra más importante de la lengua española.',
       },
     ],
   },
@@ -1033,6 +1136,8 @@ function Exercises({ mod, onXP }: { mod: Mod; onXP: (n: number) => void }) {
   const [dropState, setDropState] = useState<DropState>({})
   const [dragWord, setDragWord] = useState<string | null>(null)
   const [shakeKey, setShakeKey] = useState<string | null>(null)
+  const [matchSel, setMatchSel] = useState<Record<string, string | null>>({})
+  const [matchFlash, setMatchFlash] = useState<Record<string, { left: string; right: string } | null>>({})
 
   // Shuffle options once per module — prevents re-shuffling on every state update
   const stableOpts = useMemo(
@@ -1041,6 +1146,45 @@ function Exercises({ mod, onXP }: { mod: Mod; onXP: (n: number) => void }) {
     ),
     [mod.id] // eslint-disable-line react-hooks/exhaustive-deps
   )
+
+  // Shuffle right-side items for matching questions once per module
+  const stableMatchRights = useMemo<Record<number, string[]>>(
+    () => {
+      const result: Record<number, string[]> = {}
+      mod.challenges.forEach((q, i) => {
+        if (q.type === 'matching') result[i] = shuffle(q.pairs.map(p => p.right))
+      })
+      return result
+    },
+    [mod.id] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  // Shuffle figure options for visual_scenario questions once per module
+  const stableSceneFigures = useMemo<Record<number, string[]>>(
+    () => {
+      const result: Record<number, string[]> = {}
+      mod.challenges.forEach((q, i) => {
+        if (q.type === 'visual_scenario') result[i] = shuffle([q.answer, ...q.distractors])
+      })
+      return result
+    },
+    [mod.id] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  function handleSceneDrop(qKey: string, figure: string, answer: string) {
+    if (dropState[`${qKey}-vs`] === answer) return
+    setDropState(s => ({ ...s, [`${qKey}-vs`]: figure }))
+    setDragWord(null)
+    if (figure === answer) {
+      onXP(15)
+    } else {
+      setShakeKey(qKey)
+      setTimeout(() => {
+        setShakeKey(null)
+        setDropState(s => { const next = { ...s }; delete next[`${qKey}-vs`]; return next })
+      }, 1200)
+    }
+  }
 
   function answerQuiz(key: string, opt: { text: string; correct: boolean }) {
     if (quizState[key] !== undefined) return
@@ -1370,6 +1514,254 @@ function Exercises({ mod, onXP }: { mod: Mod; onXP: (n: number) => void }) {
                   )}
                   {isAnswered && q.explanation && (
                     <div className="mt-2 px-4 py-2 rounded-xl text-xs text-[#4B4B6B] border border-[#1A1A2E]/10 bg-white/60">
+                      💡 {q.explanation}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        }
+
+        if (q.type === 'matching') {
+          const rights = stableMatchRights[qi] ?? q.pairs.map(p => p.right)
+          const selectedLeft = matchSel[qKey] ?? null
+          const flash = matchFlash[qKey] ?? null
+          const allMatched = q.pairs.every(p => dropState[`${qKey}-m-${p.left}`] === p.right)
+          const isFlashing = !!flash
+
+          const handleMatchLeft = (left: string) => {
+            if (allMatched || isFlashing) return
+            const isAlreadyMatched = dropState[`${qKey}-m-${left}`] === q.pairs.find(p => p.left === left)?.right
+            if (isAlreadyMatched) return
+            setMatchSel(s => ({ ...s, [qKey]: s[qKey] === left ? null : left }))
+          }
+
+          const handleMatchRight = (right: string) => {
+            if (allMatched || !selectedLeft || isFlashing) return
+            const isAlreadyMatchedRight = q.pairs.some(p => dropState[`${qKey}-m-${p.left}`] === right)
+            if (isAlreadyMatchedRight) return
+            const expectedRight = q.pairs.find(p => p.left === selectedLeft)?.right
+            const left = selectedLeft
+            setMatchSel(s => ({ ...s, [qKey]: null }))
+            if (right === expectedRight) {
+              setDropState(s => ({ ...s, [`${qKey}-m-${left}`]: right }))
+              onXP(10)
+            } else {
+              setMatchFlash(s => ({ ...s, [qKey]: { left, right } }))
+              setTimeout(() => setMatchFlash(s => ({ ...s, [qKey]: null })), 1000)
+            }
+          }
+
+          return (
+            <div key={qi}>
+              <div className="flex gap-3">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black text-white flex-shrink-0"
+                  style={{ background: mod.color }}
+                >
+                  {qi + 1}
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-[#1A1A2E] mb-1">{q.prompt}</p>
+                  {/* Status hint — fixed height prevents layout jump */}
+                  <p className="text-xs font-semibold mb-3 leading-snug" style={{ minHeight: '2.4em' }}>
+                    {flash ? (
+                      <span className="text-[#cc1a1a]">
+                        ✗ <strong>«{flash.left}»</strong> no corresponde a <strong>«{flash.right}»</strong>.{' '}
+                        <span className="font-normal opacity-80">{q.wrongHint ?? 'Inténtalo de nuevo.'}</span>
+                      </span>
+                    ) : selectedLeft ? (
+                      <span style={{ color: mod.color }}>
+                        Seleccionado: <strong>«{selectedLeft}»</strong> — ahora toca su pareja →
+                      </span>
+                    ) : (
+                      <span className="text-[#4B4B6B]">Toca un elemento de la izquierda y luego su pareja de la derecha</span>
+                    )}
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {/* Left column */}
+                    <div className="flex flex-col gap-2">
+                      {q.pairs.map((pair, pi) => {
+                        const isMatched = dropState[`${qKey}-m-${pair.left}`] === pair.right
+                        const isSelected = selectedLeft === pair.left
+                        const isFlashWrong = flash?.left === pair.left
+                        return (
+                          <button
+                            key={pi}
+                            onClick={() => handleMatchLeft(pair.left)}
+                            disabled={isMatched || allMatched || isFlashing}
+                            className="px-3 py-2.5 rounded-xl border-2 font-bold text-sm text-[#1A1A2E] text-left transition-all duration-200"
+                            style={{
+                              borderColor: isMatched ? '#58CC02' : isFlashWrong ? '#FF4B4B' : isSelected ? mod.color : '#1A1A2E',
+                              background: isMatched ? 'rgba(88,204,2,0.12)' : isFlashWrong ? 'rgba(255,75,75,0.12)' : isSelected ? mod.color + '22' : '#fff',
+                              boxShadow: isMatched ? '2px 2px 0 #58CC02' : isFlashWrong ? '2px 2px 0 #FF4B4B' : isSelected ? `2px 2px 0 ${mod.color}` : '2px 2px 0 #1A1A2E',
+                              opacity: isMatched || isFlashWrong || isSelected ? 1 : (allMatched ? 0.5 : 1),
+                            }}
+                          >
+                            {isMatched && <span className="text-[#58CC02] mr-1">✓</span>}
+                            {isFlashWrong && <span className="text-[#FF4B4B] mr-1">✗</span>}
+                            {pair.left}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    {/* Right column */}
+                    <div className="flex flex-col gap-2">
+                      {rights.map((right, ri) => {
+                        const isMatched = q.pairs.some(p => dropState[`${qKey}-m-${p.left}`] === right)
+                        const isFlashWrong = flash?.right === right
+                        const isActive = !!selectedLeft && !isMatched && !isFlashing
+                        return (
+                          <button
+                            key={ri}
+                            onClick={() => handleMatchRight(right)}
+                            disabled={isMatched || allMatched || isFlashing}
+                            className="px-3 py-2.5 rounded-xl border-2 font-bold text-sm text-[#1A1A2E] text-left transition-all duration-200"
+                            style={{
+                              borderColor: isMatched ? '#58CC02' : isFlashWrong ? '#FF4B4B' : isActive ? '#1A1A2E' : 'rgba(26,26,46,0.3)',
+                              background: isMatched ? 'rgba(88,204,2,0.12)' : isFlashWrong ? 'rgba(255,75,75,0.12)' : isActive ? '#FFFBF0' : '#f0ede4',
+                              boxShadow: isMatched ? '2px 2px 0 #58CC02' : isFlashWrong ? '2px 2px 0 #FF4B4B' : isActive ? '2px 2px 0 #1A1A2E' : 'none',
+                              opacity: isMatched || isFlashWrong || isActive ? 1 : 0.5,
+                            }}
+                          >
+                            {isMatched && <span className="text-[#58CC02] mr-1">✓</span>}
+                            {isFlashWrong && <span className="text-[#FF4B4B] mr-1">✗</span>}
+                            {right}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                  {allMatched && (
+                    <div className="mt-3 px-4 py-2 rounded-xl text-sm font-bold animate-bounce-in bg-[#58CC02]/15 text-[#2d6e00] border-2 border-[#58CC02]">
+                      ✅ ¡Todas las parejas correctas! +{q.pairs.length * 10} XP
+                    </div>
+                  )}
+                  {allMatched && q.explanation && (
+                    <div className="mt-2 px-4 py-2 rounded-xl text-xs text-[#4B4B6B] border border-[#1A1A2E]/10 bg-white/60 leading-relaxed">
+                      💡 {q.explanation}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )
+        }
+
+        if (q.type === 'visual_scenario') {
+          const figures = stableSceneFigures[qi] ?? [q.answer, ...q.distractors]
+          const vsKey = `${qKey}-vs`
+          const placed = dropState[vsKey]
+          const isCorrect = placed === q.answer
+          const isWrong = !!placed && placed !== q.answer
+          const isShakingVS = shakeKey === qKey
+
+          return (
+            <div key={qi}>
+              <div className="flex gap-3">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black text-white flex-shrink-0"
+                  style={{ background: mod.color }}
+                >
+                  {qi + 1}
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold text-[#1A1A2E] mb-1">{q.scene.emoji} {q.scene.title}</p>
+                  <p className="text-xs text-[#4B4B6B] mb-3">{q.scene.setting} — <em>¿Quién pertenece a esta escena?</em></p>
+
+                  {/* Stage */}
+                  <div
+                    className="relative rounded-2xl border-3 border-[#1A1A2E] mb-4 overflow-hidden"
+                    style={{
+                      background: q.scene.stageBg,
+                      minHeight: '120px',
+                      boxShadow: '4px 4px 0 #1A1A2E',
+                    }}
+                    onDragOver={e => { e.preventDefault() }}
+                    onDrop={e => {
+                      e.preventDefault()
+                      const fig = e.dataTransfer.getData('text/plain')
+                      if (fig) handleSceneDrop(qKey, fig, q.answer)
+                    }}
+                    onClick={() => {
+                      if (!dragWord || isCorrect) return
+                      handleSceneDrop(qKey, dragWord, q.answer)
+                    }}
+                  >
+                    {/* Background emoji scenery */}
+                    <div className="absolute inset-0 flex items-end justify-around pb-2 pointer-events-none select-none opacity-60 text-3xl px-3">
+                      {q.scene.bgEmojis.map((em, i) => <span key={i}>{em}</span>)}
+                    </div>
+
+                    {/* Drop zone */}
+                    <div className="relative z-10 flex flex-col items-center justify-center" style={{ minHeight: '120px' }}>
+                      {isCorrect ? (
+                        <div className="flex flex-col items-center gap-1 animate-land">
+                          <span className="text-5xl drop-shadow-lg">{q.scene.successEmoji}</span>
+                          <span className="text-sm font-black text-white drop-shadow px-3 py-1 rounded-xl" style={{ background: 'rgba(0,0,0,0.45)' }}>
+                            {placed}
+                          </span>
+                          <span className="text-xs font-bold text-[#58CC02] bg-white/80 px-2 py-0.5 rounded-full">+15 XP ✅</span>
+                        </div>
+                      ) : isWrong ? (
+                        <div className={`flex flex-col items-center gap-1 ${isShakingVS ? 'animate-shake' : ''}`}>
+                          <span className="text-4xl opacity-50">😕</span>
+                          <span className="text-xs font-bold text-white/80 bg-black/30 px-3 py-1 rounded-xl text-center max-w-[180px]">
+                            {q.wrongHint ?? 'No es correcto. Inténtalo de nuevo.'}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2 text-white/70">
+                          <span className="text-3xl">🎯</span>
+                          <span className="text-xs font-bold border-2 border-dashed border-white/40 rounded-xl px-4 py-2 text-center" style={{ minWidth: '140px' }}>
+                            {q.scene.dropZoneLabel}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Figure buttons */}
+                  {!isCorrect && (
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {figures.map((fig, fi) => {
+                        const isSelected = dragWord === fig
+                        return (
+                          <button
+                            key={fi}
+                            draggable
+                            onDragStart={e => { e.dataTransfer.setData('text/plain', fig); setDragWord(fig) }}
+                            onDragEnd={() => setDragWord(null)}
+                            onClick={() => {
+                              if (dragWord === fig) {
+                                handleSceneDrop(qKey, fig, q.answer)
+                              } else {
+                                setDragWord(fig)
+                              }
+                            }}
+                            className="px-4 py-2.5 rounded-xl border-2 font-black text-sm transition-all duration-150 cursor-grab active:cursor-grabbing select-none"
+                            style={{
+                              borderColor: isSelected ? mod.color : '#1A1A2E',
+                              background: isSelected ? mod.color + '22' : '#FFFBF0',
+                              boxShadow: isSelected ? `3px 3px 0 ${mod.color}` : '3px 3px 0 #1A1A2E',
+                              transform: isSelected ? 'translateY(-2px)' : 'none',
+                              color: '#1A1A2E',
+                            }}
+                          >
+                            {fig}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                  {isCorrect && q.scene.successText && (
+                    <div className="mt-2 px-4 py-2 rounded-xl text-xs text-[#2d6e00] border-2 border-[#58CC02] bg-[#58CC02]/10 font-bold">
+                      🎉 {q.scene.successText}
+                    </div>
+                  )}
+                  {isCorrect && q.explanation && (
+                    <div className="mt-2 px-4 py-2 rounded-xl text-xs text-[#4B4B6B] border border-[#1A1A2E]/10 bg-white/60 leading-relaxed">
                       💡 {q.explanation}
                     </div>
                   )}
