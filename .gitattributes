@@ -144,3 +144,12 @@
 *.stl                filter=lfs diff=lfs merge=lfs -text
 *.nc                 filter=lfs diff=lfs merge=lfs -text
 *.mat                filter=lfs diff=lfs merge=lfs -text
+
+# ---------------------------------------------------------------------------
+# Favicon / app-icon assets — plain git blobs, NOT LFS
+# ---------------------------------------------------------------------------
+# These are a few KB each, and the Pages workflow runs actions/checkout
+# without `lfs: true`, so LFS pointers would be copied into dist/ in place
+# of the real images.
+public/*.png         -filter -diff -merge -text
+public/*.ico         -filter -diff -merge -text

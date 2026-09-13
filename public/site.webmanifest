@@ -1,0 +1,11 @@
+{
+  "name": "Prueba CCSE",
+  "short_name": "CCSE",
+  "icons": [
+    { "src": "android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#FF4C4B",
+  "background_color": "#FFFBF0",
+  "display": "standalone"
+}
