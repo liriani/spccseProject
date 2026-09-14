@@ -1,4 +1,8 @@
 import { useState, useRef, useMemo, useEffect, type CSSProperties } from 'react'
+import { TimelineMindMap } from './components/timeline/TimelineMindMap'
+import { DocumentWallet } from './components/sociedad/DocumentWallet'
+import { RoutineTimeSlider } from './components/sociedad/RoutineTimeSlider'
+import { EmergencyPhone } from './components/sociedad/EmergencyPhone'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -122,7 +126,7 @@ const MODULES: Mod[] = [
       { title: 'Poder Ejecutivo', summary: 'El Gobierno dirige la política interior y exterior del Estado.', detail: 'El Gobierno está formado por el Presidente, los Vicepresidentes y los Ministros. El Presidente es propuesto por el Rey y debe obtener la confianza del Congreso. Tiene su sede en el Palacio de la Moncloa (Madrid). El Gobierno puede ser derrocado mediante una moción de censura constructiva.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Congreso_de_los_Diputados_%28Madrid%29_02.jpg/640px-Congreso_de_los_Diputados_%28Madrid%29_02.jpg' },
       { title: 'Poder Legislativo', summary: 'Las Cortes Generales (Congreso + Senado) elaboran y aprueban las leyes.', detail: 'El Congreso de los Diputados tiene 350 diputados elegidos cada 4 años y es la cámara con más peso. El Senado tiene 266 senadores (elegidos o designados por las CCAAs). Ambas cámaras aprueban las leyes, aunque el Congreso puede superar el veto del Senado por mayoría absoluta.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Senado_de_Espa%C3%B1a_-_Fachada.jpg/640px-Senado_de_Espa%C3%B1a_-_Fachada.jpg' },
       { title: 'Poder Judicial', summary: 'Jueces y magistrados aplican las leyes con plena independencia.', detail: 'El poder judicial es totalmente independiente de los otros poderes. El órgano de gobierno de los jueces es el Consejo General del Poder Judicial (CGPJ). El Tribunal Supremo es el máximo órgano judicial. El Tribunal Constitucional (órgano especial) interpreta la Constitución y puede anular leyes.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Tribunal_Constitucional_de_Espa%C3%B1a.jpg/640px-Tribunal_Constitucional_de_Espa%C3%B1a.jpg' },
-      { title: 'Jefatura del Estado', summary: 'El Rey Felipe VI es el Jefe del Estado y símbolo de la nación.', detail: 'El Rey Felipe VI (desde 2014, cuando Juan Carlos I abdicó) es Jefe del Estado. Su papel es representativo y arbitral: sanciona y promulga las leyes, propone al candidato a Presidente del Gobierno y representa a España en el exterior. No elabora leyes ni dirige el Gobierno.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Congreso_de_los_Diputados_%28Madrid%29_02.jpg/640px-Congreso_de_los_Diputados_%28Madrid%29_02.jpg' },
+      { title: 'Jefatura del Estado', summary: 'El Rey Felipe VI es el Jefe del Estado y símbolo de la nación.', detail: 'El Rey Felipe VI (desde 2014, cuando Juan Carlos I abdicó) es Jefe del Estado. Su papel es representativo y arbitral: sanciona y promulga las leyes, propone al candidato a Presidente del Gobierno y representa a España en el exterior. No elabora leyes ni dirige el Gobierno.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Palacio_Real_de_Madrid_-_01.jpg?width=640' },
       { title: 'Administración Territorial', summary: '17 CCAAs + 2 Ciudades Autónomas + 50 provincias + 8.000+ municipios.', detail: 'España tiene tres niveles administrativos: el Estado central, las 17 Comunidades Autónomas (con Ceuta y Melilla como Ciudades Autónomas), las 50 provincias (gobernadas por Diputaciones) y más de 8.000 municipios (con Ayuntamientos). Cada nivel tiene competencias propias y es elegido democráticamente.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Subdivisions_of_Spain_with_coats_of_arms.png/640px-Subdivisions_of_Spain_with_coats_of_arms.png' },
       { title: 'Defensor del Pueblo', summary: 'Protege los derechos ciudadanos ante las Administraciones públicas.', detail: 'El Defensor del Pueblo es elegido por las Cortes Generales y actúa como su comisionado. Cualquier ciudadano puede presentar una queja sin coste si cree que sus derechos han sido vulnerados por un organismo público. Es un organismo independiente del Gobierno, aunque depende de las Cortes.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg/640px-Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg' },
     ],
@@ -283,11 +287,11 @@ const MODULES: Mod[] = [
     theory: `<p style="font-size:0.82rem;color:#1A1A2E;line-height:1.6;margin:0 0 0.75rem 0">La Constitución garantiza un amplio catálogo de ${_badge('Derechos Fundamentales', 28, 176, 246)} para todas las personas que viven en España, sin distinción de origen o creencia.</p>${_h('Principales Derechos')}${_grid(`${_card(ICO_GRADCAP, '#1CB0F6', 'Educación', 'La enseñanza básica (6–16 años) es obligatoria y gratuita para todos.')}${_card(ICO_HEART, '#FF4B4B', 'Sanidad', 'La atención sanitaria pública es gratuita para todos los residentes con derecho a ella.')}${_card(ICO_SHIELD, '#58CC02', 'Igualdad', 'Nadie puede ser discriminado por razón de nacimiento, sexo, religión u opinión.')}`)}<div style="margin-top:0.75rem">${_bar(ICO_GLOBE, '#1CB0F6', `España es un Estado <strong>aconfesional</strong>: <strong>no tiene religión oficial</strong>. La Constitución garantiza la libertad ideológica y religiosa de toda persona.`)}</div>${_h('Edades Clave')}<div style="display:flex;flex-direction:column;gap:0.4rem">${_li(ICO_CLOCK, '#1CB0F6', '<strong>14 años</strong> — Obligación de obtener el <em>DNI</em>.')}${_li(ICO_CLOCK, '#1CB0F6', '<strong>16 años</strong> — Fin de la escolarización obligatoria.')}${_li(ICO_CHECK, '#1CB0F6', '<strong>18 años</strong> — Mayoría de edad: derecho al voto y al trabajo pleno.')}${_h('Deberes Constitucionales')}${_li(ICO_SHIELD, '#1CB0F6', 'Defender a España, cumplir las leyes y contribuir al gasto público mediante impuestos.')}${_li(ICO_CHECK, '#1CB0F6', 'Respetar los derechos y libertades de los demás ciudadanos.')}</div>`,
     steps: [
       { title: 'Mayoría de Edad', summary: 'Plena capacidad civil, laboral y política a los 18 años.', detail: 'A los 18 años se puede votar, firmar contratos, casarse sin permiso de los padres y actuar con plena capacidad jurídica. Antes, la ley exige consentimiento de padres o tutores para actos importantes. El DNI es obligatorio desde los 14 años y las relaciones laborales pueden comenzar a los 16 con autorización paterna.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg/640px-Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg' },
-      { title: 'Derecho a la Educación', summary: 'Enseñanza básica (6-16 años) obligatoria y gratuita.', detail: 'La enseñanza básica comprende Educación Primaria (6-12 años) y ESO (12-16 años), ambas obligatorias y gratuitas. El Bachillerato y la FP no son obligatorios pero son gratuitos en centros públicos. La educación universitaria tiene tasas, aunque existen becas. La educación es competencia de cada Comunidad Autónoma.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Tribunal_Constitucional_de_Espa%C3%B1a.jpg/640px-Tribunal_Constitucional_de_Espa%C3%B1a.jpg' },
-      { title: 'Derecho a la Sanidad', summary: 'Atención sanitaria pública y gratuita para todos los residentes.', detail: 'El Sistema Nacional de Salud cubre a todos los residentes con derecho reconocido. La tarjeta sanitaria (TSI) da acceso al médico de cabecera, especialistas y urgencias. Se solicita en el Centro de Salud presentando el DNI/NIE y el certificado de empadronamiento. Cada CCAA gestiona su propio sistema sanitario.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Tapas_in_Spain.jpg/640px-Tapas_in_Spain.jpg' },
+      { title: 'Derecho a la Educación', summary: 'Enseñanza básica (6-16 años) obligatoria y gratuita.', detail: 'La enseñanza básica comprende Educación Primaria (6-12 años) y ESO (12-16 años), ambas obligatorias y gratuitas. El Bachillerato y la FP no son obligatorios pero son gratuitos en centros públicos. La educación universitaria tiene tasas, aunque existen becas. La educación es competencia de cada Comunidad Autónoma.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Universidad_de_Salamanca_-_fachada_rica.jpg?width=640' },
+      { title: 'Derecho a la Sanidad', summary: 'Atención sanitaria pública y gratuita para todos los residentes.', detail: 'El Sistema Nacional de Salud cubre a todos los residentes con derecho reconocido. La tarjeta sanitaria (TSI) da acceso al médico de cabecera, especialistas y urgencias. Se solicita en el Centro de Salud presentando el DNI/NIE y el certificado de empadronamiento. Cada CCAA gestiona su propio sistema sanitario.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Recinte_Modernista_de_Sant_Pau_02.jpg?width=640' },
       { title: 'Secreto de Comunicaciones', summary: 'Comunicaciones privadas protegidas — solo intervenibles con orden judicial.', detail: 'El artículo 18.3 de la Constitución protege el secreto de las comunicaciones postales, telegráficas y telefónicas. Solo un juez puede ordenar la intervención. Ninguna autoridad (ni policía ni gobierno) puede interceptarlas sin autorización judicial. Esta garantía se extiende también a las comunicaciones digitales (emails, mensajería).', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg/640px-Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg' },
       { title: 'Participación Política', summary: 'Sufragio universal, libre, igual, directo y secreto desde los 18 años.', detail: 'El derecho al voto se ejerce en elecciones generales (Estado), autonómicas (CCAAs) y locales (municipios). Los ciudadanos de la UE residentes en España pueden votar en elecciones municipales y europeas, pero NO en las generales ni autonómicas. Los ciudadanos también pueden participar mediante referéndums y el ejercicio del derecho de petición.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Subdivisions_of_Spain_with_coats_of_arms.png/640px-Subdivisions_of_Spain_with_coats_of_arms.png' },
-      { title: 'Fuerzas Armadas', summary: 'Ejército profesional desde 2001. Servicio militar voluntario.', detail: 'Las Fuerzas Armadas españolas se componen del Ejército de Tierra, la Armada y el Ejército del Aire y del Espacio. El servicio militar obligatorio fue suprimido en España en el año 2001. El Rey es el Jefe Supremo de las Fuerzas Armadas. España es miembro de la OTAN desde 1982 y participa en misiones internacionales de paz.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Congreso_de_los_Diputados_%28Madrid%29_02.jpg/640px-Congreso_de_los_Diputados_%28Madrid%29_02.jpg' },
+      { title: 'Fuerzas Armadas', summary: 'Ejército profesional desde 2001. Servicio militar voluntario.', detail: 'Las Fuerzas Armadas españolas se componen del Ejército de Tierra, la Armada y el Ejército del Aire y del Espacio. El servicio militar obligatorio fue suprimido en España en el año 2001. El Rey es el Jefe Supremo de las Fuerzas Armadas. España es miembro de la OTAN desde 1982 y participa en misiones internacionales de paz.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Guardia_Civil_en_el_desfile_del_12_de_Octubre_de_2010.jpg?width=640' },
     ],
     proTip: 'Los ciudadanos de la UE residentes en España pueden votar en las elecciones municipales y europeas, pero NO en las elecciones generales ni autonómicas.',
     mistakes: 'La educación obligatoria termina a los 16 años (ESO), NO a los 18. El servicio militar NO es obligatorio en España actualmente. Casarse en España actualmente requiere ser mayor de edad (18 años), tras la reforma del Código Civil de 2015.',
@@ -393,11 +397,11 @@ const MODULES: Mod[] = [
     theory: `<p style="font-size:0.82rem;color:#1A1A2E;line-height:1.6;margin:0 0 0.75rem 0">España se organiza en ${_badge('17 Comunidades Autónomas', 88, 204, 2)}, ${_badge('50 Provincias', 88, 204, 2)} y miles de municipios. Cada nivel tiene su propio gobierno y competencias.</p>${_h('Organización Territorial')}${_grid(`${_card(ICO_BUILDING, '#58CC02', 'Municipios', 'El nivel más cercano al ciudadano, gobernado por el Ayuntamiento y su Alcalde.')}${_card(ICO_MAPPIN, '#58CC02', 'Comunidades', 'Las 17 CCAAs tienen su propio Parlamento y Estatuto de Autonomía. Ceuta y Melilla son Ciudades Autónomas.')}${_card(ICO_MOUNTAIN, '#1CB0F6', 'Geografía', 'Gran meseta central, tres mares (Atlántico, Cantábrico, Mediterráneo) y dos archipiélagos.')}`)}<div style="margin-top:0.75rem">${_bar(ICO_SUN, '#58CC02', `Los picos más altos: ${_badge('Teide 3.718m', 88, 204, 2)} (Canarias) y ${_badge('Mulhacén 3.479m', 88, 204, 2)} (Sierra Nevada, Andalucía).`)}</div>${_h('Principales Ríos')}<div style="display:flex;flex-direction:column;gap:0.4rem">${_li(ICO_WAVES, '#1CB0F6', '<strong>Ebro</strong> — El único gran río que desemboca en el <em>Mediterráneo</em>.')}${_li(ICO_WAVES, '#1CB0F6', '<strong>Tajo, Duero, Guadiana, Guadalquivir</strong> — Desembocan en el <em>Atlántico</em>.')}${_h('Archipiélagos')}${_li(ICO_SUN, '#58CC02', '<strong>Islas Canarias</strong> — Frente a África. Clima subtropical. Canarias está <strong>una hora menos</strong> que la Península.')}${_li(ICO_WAVES, '#1CB0F6', '<strong>Islas Baleares</strong> — En el Mediterráneo. Incluye Mallorca, Menorca e Ibiza.')}</div>`,
     steps: [
       { title: 'Comunidades Autónomas', summary: '17 CCAAs + 2 Ciudades Autónomas. Cada una con su Estatuto de Autonomía.', detail: 'España tiene 17 Comunidades Autónomas y 2 Ciudades Autónomas: Ceuta y Melilla (en el norte de África). Cada comunidad tiene su propio Parlamento autonómico, Presidente y Estatuto de Autonomía (su "constitución" propia). Las competencias varían: algunas tienen policía propia (Mossos, Ertzaintza), otras ceden más a las Fuerzas del Estado.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Subdivisions_of_Spain_with_coats_of_arms.png/640px-Subdivisions_of_Spain_with_coats_of_arms.png' },
-      { title: 'Provincias y Municipios', summary: '50 provincias y más de 8.000 municipios gobernados por Ayuntamientos.', detail: 'Las 50 provincias tienen sus Diputaciones Provinciales (excepto País Vasco y Navarra, que cuentan con Juntas Generales y Diputaciones Forales con régimen especial). Los municipios son gobernados por Ayuntamientos, encabezados por el Alcalde y los Concejales elegidos cada 4 años. En grandes ciudades hay Juntas de Distrito.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Congreso_de_los_Diputados_%28Madrid%29_02.jpg/640px-Congreso_de_los_Diputados_%28Madrid%29_02.jpg' },
-      { title: 'Principales Ríos', summary: 'El Ebro es el único gran río que desemboca en el Mediterráneo.', detail: 'El Ebro (930 km) es el más caudaloso y desemboca en el Mediterráneo (Delta del Ebro). El Tajo es el más largo de la Península Ibérica (1.007 km) y desemboca en Lisboa (Atlántico). El Duero, Guadiana y Guadalquivir también desembocan en el Atlántico. El Guadalquivir es el único río navegable hasta Sevilla.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Senado_de_Espa%C3%B1a_-_Fachada.jpg/640px-Senado_de_Espa%C3%B1a_-_Fachada.jpg' },
-      { title: 'Montañas y Picos', summary: 'El Teide (3.718m) en Canarias es el pico más alto de España y del Atlántico.', detail: 'El Teide en Tenerife (Canarias) es el volcán activo más alto del Atlántico y el tercer volcán más grande del mundo sobre el nivel del mar. El Mulhacén (3.479 m) en Sierra Nevada (Granada, Andalucía) es el pico más alto de la Península. Los Pirineos separan España de Francia y Andorra.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Tribunal_Constitucional_de_Espa%C3%B1a.jpg/640px-Tribunal_Constitucional_de_Espa%C3%B1a.jpg' },
+      { title: 'Provincias y Municipios', summary: '50 provincias y más de 8.000 municipios gobernados por Ayuntamientos.', detail: 'Las 50 provincias tienen sus Diputaciones Provinciales (excepto País Vasco y Navarra, que cuentan con Juntas Generales y Diputaciones Forales con régimen especial). Los municipios son gobernados por Ayuntamientos, encabezados por el Alcalde y los Concejales elegidos cada 4 años. En grandes ciudades hay Juntas de Distrito.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Plaza_Mayor_de_Madrid_06.jpg?width=640' },
+      { title: 'Principales Ríos', summary: 'El Ebro es el único gran río que desemboca en el Mediterráneo.', detail: 'El Ebro (930 km) es el más caudaloso y desemboca en el Mediterráneo (Delta del Ebro). El Tajo es el más largo de la Península Ibérica (1.007 km) y desemboca en Lisboa (Atlántico). El Duero, Guadiana y Guadalquivir también desembocan en el Atlántico. El Guadalquivir es el único río navegable hasta Sevilla.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Ebro_desde_el_Puente_de_Piedra.jpg?width=640' },
+      { title: 'Montañas y Picos', summary: 'El Teide (3.718m) en Canarias es el pico más alto de España y del Atlántico.', detail: 'El Teide en Tenerife (Canarias) es el volcán activo más alto del Atlántico y el tercer volcán más grande del mundo sobre el nivel del mar. El Mulhacén (3.479 m) en Sierra Nevada (Granada, Andalucía) es el pico más alto de la Península. Los Pirineos separan España de Francia y Andorra.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Teide_national_park_view_from_mirador_de_la_ruleta.JPG?width=640' },
       { title: 'Archipiélagos', summary: 'Canarias (Atlántico) e Islas Baleares (Mediterráneo) — dos mundos distintos.', detail: 'Las Islas Canarias están frente a la costa de África (Marruecos y Mauritania), tienen clima subtropical y su huso horario es UTC+0 (una hora menos que la Península). Las Islas Baleares (Mallorca, Menorca, Ibiza, Formentera) están en el Mediterráneo y tienen clima mediterráneo. Ambas son comunidades autónomas uniprovinciales.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Subdivisions_of_Spain_with_coats_of_arms.png/640px-Subdivisions_of_Spain_with_coats_of_arms.png' },
-      { title: 'Climas de España', summary: 'Cuatro zonas climáticas: mediterráneo, atlántico, continental y subtropical.', detail: 'El clima mediterráneo domina el litoral E y S (veranos secos y calurosos, inviernos suaves). El atlántico cubre el norte (Galicia, Cantabria, País Vasco): lluvioso y verde todo el año. El continental ocupa la Meseta Central: extremos térmicos, veranos calurosos e inviernos muy fríos. El subtropical cubre Canarias: temperaturas suaves todo el año.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg/640px-Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg' },
+      { title: 'Climas de España', summary: 'Cuatro zonas climáticas: mediterráneo, atlántico, continental y subtropical.', detail: 'El clima mediterráneo domina el litoral E y S (veranos secos y calurosos, inviernos suaves). El atlántico cubre el norte (Galicia, Cantabria, País Vasco): lluvioso y verde todo el año. El continental ocupa la Meseta Central: extremos térmicos, veranos calurosos e inviernos muy fríos. El subtropical cubre Canarias: temperaturas suaves todo el año.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Picos_de_Europa_-_Naranjo_de_Bulnes_03.jpg?width=640' },
     ],
     proTip: "La comunidad autónoma más grande es Castilla y León. La más poblada es Andalucía. La capital (Madrid) pertenece a la Comunidad de Madrid. El río Júcar desemboca en el Mediterráneo, no el Tajo.",
     showMap: true,
@@ -721,12 +725,12 @@ const MODULES: Mod[] = [
     heroImage: 'https://images.unsplash.com/photo-1656423521731-9665583f100c?w=900&h=350&fit=crop&auto=format',
     theory: `<p style="font-size:0.82rem;color:#1A1A2E;line-height:1.6;margin:0 0 0.75rem 0">La vida en España tiene ritmos propios. Conocer los ${_badge('trámites esenciales', 255, 200, 0)} y los horarios te facilita la integración desde el primer día.</p>${_h('Trámites Esenciales')}${_grid(`${_card(ICO_FILETEXT, '#1A1A2E', 'DNI', 'Obligatorio desde los 14 años. Se tramita en la Comisaría de Policía con foto y partida de nacimiento.')}${_card(ICO_BUILDING, '#1CB0F6', 'Empadronamiento', 'Registro municipal en el Ayuntamiento. Necesario para acceder a servicios públicos.')}${_card(ICO_HEART, '#FF4B4B', 'Tarjeta sanitaria', 'Se solicita en el Centro de Salud más cercano. Permite el acceso a la sanidad pública.')}`)}<div style="margin-top:0.75rem">${_bar(ICO_UTENSILS, '#FFC800', '<strong>Horarios típicos:</strong> Desayuno 8–9h · Almuerzo 11–12h · <strong>Comida 14–15:30h</strong> · Merienda 17–18h · <strong>Cena 21–22h</strong>.')}</div>${_h('Números de Emergencia')}<div style="display:flex;flex-direction:column;gap:0.4rem">${_li(ICO_PHONE, '#FFC800', `${_badge('112', 255, 200, 0)} — Emergencias generales: policía, bomberos y ambulancias. Disponible 24h.`)}${_li(ICO_PHONE, '#FFC800', `${_badge('016', 255, 200, 0)} — Violencia de género. Gratuito, confidencial y disponible 24 horas.`)}${_li(ICO_PHONE, '#FFC800', `${_badge('091', 255, 200, 0)} — Policía Nacional. ${_badge('062', 255, 200, 0)} — Guardia Civil. ${_badge('061', 255, 200, 0)} — Urgencias sanitarias.`)}</div>`,
     steps: [
-      { title: 'DNI y Documentación', summary: 'DNI obligatorio para españoles desde los 14 años. Se tramita en Policía Nacional.', detail: 'El Documento Nacional de Identidad (DNI) es obligatorio para todos los ciudadanos españoles a partir de los 14 años. Se tramita en la Comisaría de Policía Nacional con foto, partida de nacimiento y documentación del domicilio. El DNI electrónico (DNIe) también sirve como firma digital. Los extranjeros residentes necesitan el NIE (Número de Identidad de Extranjero) para cualquier trámite oficial.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg/640px-Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg' },
-      { title: 'Empadronamiento', summary: 'Registro en el padrón municipal. Imprescindible para acceder a servicios públicos.', detail: 'El empadronamiento es el registro oficial de residencia en un municipio. Se tramita en el Ayuntamiento presentando el contrato de alquiler o escritura de propiedad y el DNI/NIE/pasaporte. Es obligatorio y necesario para: acceder a la sanidad pública, escolarizar a los hijos, solicitar la tarjeta sanitaria, votar en elecciones locales y para muchos trámites de extranjería.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Congreso_de_los_Diputados_%28Madrid%29_02.jpg/640px-Congreso_de_los_Diputados_%28Madrid%29_02.jpg' },
-      { title: 'Tarjeta Sanitaria', summary: 'Tramítala en el centro de salud. Acceso gratuito a toda la sanidad pública.', detail: 'La Tarjeta Sanitaria Individual (TSI) da acceso a la atención médica del Sistema Nacional de Salud: médico de cabecera, pediatra, especialistas, urgencias y hospitalización. Se solicita en el centro de salud del barrio presentando el DNI/NIE y el certificado de empadronamiento. Cada Comunidad Autónoma gestiona su propio sistema sanitario, pero la cobertura básica es universal para todos los residentes.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Senado_de_Espa%C3%B1a_-_Fachada.jpg/640px-Senado_de_Espa%C3%B1a_-_Fachada.jpg' },
-      { title: 'Números de Emergencia', summary: '112 emergencias generales · 016 violencia de género · 091 Policía Nacional.', detail: 'El 112 es el número único europeo de emergencias: atiende llamadas de policía, bomberos y ambulancias, disponible las 24 horas en varios idiomas. El 016 es el número gratuito y confidencial para víctimas de violencia de género, también 24 horas los 365 días del año. El 091 (Policía Nacional), 062 (Guardia Civil) y 061 (Urgencias sanitarias) son números específicos. Llama al 112 si no sabes cuál usar.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Tribunal_Constitucional_de_Espa%C3%B1a.jpg/640px-Tribunal_Constitucional_de_Espa%C3%B1a.jpg' },
-      { title: 'Horarios Españoles', summary: 'Comida 14–15:30 h · Cena 21–22 h · Canarias tiene 1 hora menos.', detail: 'Los horarios españoles son más tardíos que en el resto de Europa. El desayuno es a las 8–9 h, el almuerzo a las 11–12 h, la comida principal a las 14–15:30 h (muchos comercios cierran), la merienda a las 17–18 h y la cena a las 21–22 h. Las tiendas suelen cerrar por la tarde entre las 14 y las 17 h. Las Islas Canarias están en el huso horario UTC+0 (siempre una hora menos que la Península).', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Subdivisions_of_Spain_with_coats_of_arms.png/640px-Subdivisions_of_Spain_with_coats_of_arms.png' },
-      { title: 'Gastronomía', summary: 'Paella (Valencia), tortilla española, gazpacho (Andalucía), pintxos (País Vasco).', detail: 'La paella valenciana es el plato más internacional de España (arroz, pollo, conejo, judías verdes y garrofón). La tortilla española (de patatas y huevo) es el plato más popular del día a día. El gazpacho es una sopa fría de tomate típica de Andalucía. Los pintxos (o pinchos) son pequeñas tapas sobre pan típicas del País Vasco. El cocido madrileño, el pulpo a feira y el pan amb tomàquet catalán también son iconos gastronómicos.', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg/640px-Firma_de_la_Constituci%C3%B3n_espa%C3%B1ola_de_1978.jpg' },
+      { title: 'DNI y Documentación', summary: 'DNI obligatorio para españoles desde los 14 años. Se tramita en Policía Nacional.', detail: 'El Documento Nacional de Identidad (DNI) es obligatorio para todos los ciudadanos españoles a partir de los 14 años. Se tramita en la Comisaría de Policía Nacional con foto, partida de nacimiento y documentación del domicilio. El DNI electrónico (DNIe) también sirve como firma digital. Los extranjeros residentes necesitan el NIE (Número de Identidad de Extranjero) para cualquier trámite oficial.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Policia_Nacional_de_Espana_-_fachada_comisaria.jpg?width=640' },
+      { title: 'Empadronamiento', summary: 'Registro en el padrón municipal. Imprescindible para acceder a servicios públicos.', detail: 'El empadronamiento es el registro oficial de residencia en un municipio. Se tramita en el Ayuntamiento presentando el contrato de alquiler o escritura de propiedad y el DNI/NIE/pasaporte. Es obligatorio y necesario para: acceder a la sanidad pública, escolarizar a los hijos, solicitar la tarjeta sanitaria, votar en elecciones locales y para muchos trámites de extranjería.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Palacio_de_Cibeles,_Madrid,_Spain.jpg?width=640' },
+      { title: 'Tarjeta Sanitaria', summary: 'Tramítala en el centro de salud. Acceso gratuito a toda la sanidad pública.', detail: 'La Tarjeta Sanitaria Individual (TSI) da acceso a la atención médica del Sistema Nacional de Salud: médico de cabecera, pediatra, especialistas, urgencias y hospitalización. Se solicita en el centro de salud del barrio presentando el DNI/NIE y el certificado de empadronamiento. Cada Comunidad Autónoma gestiona su propio sistema sanitario, pero la cobertura básica es universal para todos los residentes.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Hospital_Universitario_La_Paz_Madrid.jpg?width=640' },
+      { title: 'Números de Emergencia', summary: '112 emergencias generales · 016 violencia de género · 091 Policía Nacional.', detail: 'El 112 es el número único europeo de emergencias: atiende llamadas de policía, bomberos y ambulancias, disponible las 24 horas en varios idiomas. El 016 es el número gratuito y confidencial para víctimas de violencia de género, también 24 horas los 365 días del año. El 091 (Policía Nacional), 062 (Guardia Civil) y 061 (Urgencias sanitarias) son números específicos. Llama al 112 si no sabes cuál usar.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Ambulancia_de_soporte_vital_avanzado_(UVI_movil).jpg?width=640' },
+      { title: 'Horarios Españoles', summary: 'Comida 14–15:30 h · Cena 21–22 h · Canarias tiene 1 hora menos.', detail: 'Los horarios españoles son más tardíos que en el resto de Europa. El desayuno es a las 8–9 h, el almuerzo a las 11–12 h, la comida principal a las 14–15:30 h (muchos comercios cierran), la merienda a las 17–18 h y la cena a las 21–22 h. Las tiendas suelen cerrar por la tarde entre las 14 y las 17 h. Las Islas Canarias están en el huso horario UTC+0 (siempre una hora menos que la Península).', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Tapas_in_Spain.jpg/640px-Tapas_in_Spain.jpg' },
+      { title: 'Gastronomía', summary: 'Paella (Valencia), tortilla española, gazpacho (Andalucía), pintxos (País Vasco).', detail: 'La paella valenciana es el plato más internacional de España (arroz, pollo, conejo, judías verdes y garrofón). La tortilla española (de patatas y huevo) es el plato más popular del día a día. El gazpacho es una sopa fría de tomate típica de Andalucía. Los pintxos (o pinchos) son pequeñas tapas sobre pan típicas del País Vasco. El cocido madrileño, el pulpo a feira y el pan amb tomàquet catalán también son iconos gastronómicos.', imageUrl: 'https://commons.wikimedia.org/wiki/Special:FilePath/Paella_Valenciana_original.jpg?width=640' },
     ],
     proTip: 'La ONCE es la organización que trabaja para la integración de las personas con discapacidad visual (ciegos). El Camino de Santiago es Patrimonio de la Humanidad. El título de "Doctor" se obtiene tras leer una tesis doctoral.',
     gifs: [
@@ -1096,7 +1100,7 @@ function MapGame({ color }: { color: string }) {
             <button
               key={r.id}
               onClick={() => click(r.id)}
-              className={`absolute w-5 h-5 rounded-full border-2 border-white cursor-pointer transition-all duration-200 hover:scale-125 ${isShaking ? 'animate-shake' : ''}`}
+              className={`absolute rounded-full border-2 border-white cursor-pointer transition-all duration-200 hover:scale-125 ${isShaking ? 'animate-shake' : ''}`}
               style={{
                 left: `${r.x}%`,
                 top: `${r.y}%`,
@@ -1104,6 +1108,10 @@ function MapGame({ color }: { color: string }) {
                 background: isFound ? '#58CC02' : (done ? '#1CB0F6' : color),
                 boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
                 zIndex: isFound ? 5 : 2,
+                width: '2rem',
+                height: '2rem',
+                minWidth: '2rem',
+                minHeight: '2rem',
               }}
               title={isFound ? r.name : '?'}
             />
@@ -1131,7 +1139,7 @@ function MapGame({ color }: { color: string }) {
 type QuizState = Record<string, { optionText: string; correct: boolean }>
 type DropState = Record<string, string>
 
-function Exercises({ mod, onXP }: { mod: Mod; onXP: (n: number) => void }) {
+function Exercises({ mod, onXP, onHeartLost }: { mod: Mod; onXP: (n: number) => void; onHeartLost: () => void }) {
   const [quizState, setQuizState] = useState<QuizState>({})
   const [dropState, setDropState] = useState<DropState>({})
   const [dragWord, setDragWord] = useState<string | null>(null)
@@ -1191,6 +1199,7 @@ function Exercises({ mod, onXP }: { mod: Mod; onXP: (n: number) => void }) {
     setQuizState(s => ({ ...s, [key]: { optionText: opt.text, correct: opt.correct } }))
     if (opt.correct) onXP(10)
     else {
+      onHeartLost()
       setShakeKey(key)
       setTimeout(() => setShakeKey(null), 400)
     }
@@ -1388,11 +1397,13 @@ function Exercises({ mod, onXP }: { mod: Mod; onXP: (n: number) => void }) {
                           draggable={!used}
                           onDragStart={() => setDragWord(word)}
                           onDragEnd={() => setDragWord(null)}
+                          onClick={() => !used && setDragWord(dragWord === word ? null : word)}
                           className="px-3 py-1.5 rounded-lg border-2 border-[#1A1A2E] font-bold text-sm text-[#1A1A2E] cursor-grab select-none transition-all"
                           style={{
-                            background: used ? '#e5e5e5' : '#fff',
+                            background: used ? '#e5e5e5' : dragWord === word ? mod.color + '30' : '#fff',
                             opacity: used ? 0.4 : 1,
-                            boxShadow: used ? 'none' : '2px 2px 0 #1A1A2E',
+                            boxShadow: dragWord === word ? `0 0 0 2px ${mod.color}` : used ? 'none' : '2px 2px 0 #1A1A2E',
+                            outline: dragWord === word ? `2px solid ${mod.color}` : 'none',
                           }}
                         >
                           {word}
@@ -1417,7 +1428,13 @@ function Exercises({ mod, onXP }: { mod: Mod; onXP: (n: number) => void }) {
                             e.preventDefault()
                             if (dragWord && !isCorrect) answerDrop(k, part.answer, dragWord)
                           }}
-                          className={`inline-block mx-1 px-3 py-0.5 rounded-lg border-2 font-bold text-sm align-middle transition-all min-w-[80px] text-center ${isCorrect ? 'cursor-default' : 'cursor-pointer'} ${shakeKey === k ? 'animate-shake' : ''}`}
+                          onClick={() => {
+                            if (dragWord && !isCorrect) {
+                              answerDrop(k, part.answer, dragWord)
+                              setDragWord(null)
+                            }
+                          }}
+                          className={`inline-block mx-1 px-3 py-0.5 rounded-lg border-2 font-bold text-sm align-middle transition-all min-w-[80px] text-center ${isCorrect ? 'cursor-default' : dragWord ? 'cursor-pointer ring-2 ring-offset-1' : 'cursor-pointer'} ${shakeKey === k ? 'animate-shake' : ''}`}
                           style={{
                             borderStyle: val ? 'solid' : 'dashed',
                             borderColor: isCorrect ? '#58CC02' : isWrong ? '#FF4B4B' : '#1A1A2E',
@@ -1864,7 +1881,7 @@ export default function App() {
   const [xpAnim, setXpAnim] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [floatingXPs, setFloatingXPs] = useState<{ id: number; amount: number }[]>([])
-  const [activeView, setActiveView] = useState<'module' | 'progress'>('module')
+  const [activeView, setActiveView] = useState<'module' | 'progress' | 'timeline' | 'sociedad'>('module')
   const [unlockedBadges, setUnlockedBadges] = useState<Set<string>>(new Set(['b0']))
   const [newBadgeAlert, setNewBadgeAlert] = useState<Badge | null>(null)
   const xpIdRef = useRef(0)
@@ -2016,6 +2033,32 @@ export default function App() {
             <span className="flex-1 text-sm leading-snug">Mi Progresión</span>
             <span className="text-xs font-black text-[#CE82FF]">{unlockedBadges.size}/{BADGES.length}</span>
           </button>
+          <button
+            onClick={() => { setActiveView('timeline'); setSidebarOpen(false) }}
+            className="w-full text-left px-4 py-3 rounded-xl border-2 flex items-center gap-3 transition-all font-bold"
+            style={{
+              borderColor: activeView === 'timeline' ? '#FF6B35' : 'transparent',
+              background: activeView === 'timeline' ? '#FF6B3520' : 'transparent',
+              boxShadow: activeView === 'timeline' ? '3px 3px 0 #FF6B35' : 'none',
+              color: '#1A1A2E',
+            }}
+          >
+            <span className="text-xl">🗺️</span>
+            <span className="flex-1 text-sm leading-snug">Historia de España</span>
+          </button>
+          <button
+            onClick={() => { setActiveView('sociedad'); setSidebarOpen(false) }}
+            className="w-full text-left px-4 py-3 rounded-xl border-2 flex items-center gap-3 transition-all font-bold"
+            style={{
+              borderColor: activeView === 'sociedad' ? '#1CB0F6' : 'transparent',
+              background: activeView === 'sociedad' ? '#1CB0F620' : 'transparent',
+              boxShadow: activeView === 'sociedad' ? '3px 3px 0 #1CB0F6' : 'none',
+              color: '#1A1A2E',
+            }}
+          >
+            <span className="text-xl">🏙️</span>
+            <span className="flex-1 text-sm leading-snug">Sociedad y trámites</span>
+          </button>
         </nav>
 
         {/* XP display */}
@@ -2090,8 +2133,16 @@ export default function App() {
         {/* Content */}
         {activeView === 'progress' ? (
           <ProgressionMap xp={xp} unlockedBadges={unlockedBadges} />
+        ) : activeView === 'timeline' ? (
+          <TimelineMindMap />
+        ) : activeView === 'sociedad' ? (
+          <div className="max-w-3xl mx-auto px-4 md:px-8 py-10 space-y-16">
+            <DocumentWallet />
+            <RoutineTimeSlider />
+            <EmergencyPhone />
+          </div>
         ) : null}
-        <div className={`max-w-3xl mx-auto px-4 md:px-8 py-8 pb-24 space-y-10 ${activeView === 'progress' ? 'hidden' : ''}`}>
+        <div className={`max-w-3xl mx-auto px-4 md:px-8 py-8 pb-24 space-y-10 ${activeView !== 'module' ? 'hidden' : ''}`}>
 
           {/* ── Hero ── */}
           <div
@@ -2213,7 +2264,7 @@ export default function App() {
             className="rounded-2xl border-3 border-[#1A1A2E] p-6"
             style={{ borderWidth: 3, background: '#fff', boxShadow: `5px 5px 0 #1A1A2E` }}
           >
-            <Exercises mod={mod} onXP={gainXP} />
+            <Exercises mod={mod} onXP={gainXP} onHeartLost={() => setHearts(h => Math.max(0, h - 1))} />
           </div>
 
           {/* ── Complete ── */}
