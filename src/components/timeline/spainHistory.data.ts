@@ -5,21 +5,21 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
   {
     id: 'al-andalus',
     year: 711,
-    era: 'Early Medieval',
+    era: 'Alta Edad Media',
     title: 'Al-Ándalus',
     shortDesc:
-      'The Umayyad conquest begins 800 years of Islamic civilisation on the Iberian Peninsula.',
+      'La conquista omeya da inicio a 800 años de civilización islámica en la península ibérica.',
     fullDesc:
-      `The Umayyad invasion of 711 transformed Iberia into Al-Ándalus — at its height the most sophisticated civilisation west of Constantinople. Córdoba's library held 400,000 volumes when Paris had fewer than a dozen monasteries. The period of Convivencia saw Christians, Jews, and Muslims exchange philosophy, medicine, and poetry in an unprecedented cultural synthesis that shaped the European Renaissance.`,
-    tags: ['islam', 'medieval', 'convivencia', 'architecture'],
+      `La invasión omeya de 711 transformó Iberia en Al-Ándalus: en su apogeo, la civilización más sofisticada al oeste de Constantinopla. La biblioteca de Córdoba albergaba 400.000 volúmenes cuando París apenas contaba con una docena de monasterios. El periodo de la Convivencia vio a cristianos, judíos y musulmanes intercambiar filosofía, medicina y poesía en una síntesis cultural sin precedentes que forjó el Renacimiento europeo.`,
+    tags: ['islam', 'medieval', 'convivencia', 'arquitectura'],
     subNodes: [
       {
         id: 'caliphate-cordoba',
         type: 'event',
-        label: 'Caliphate of Córdoba',
+        label: 'Califato de Córdoba',
         year: 929,
         description:
-          'Abd al-Rahman III proclaims the Caliphate, making Córdoba the largest city in Western Europe and its foremost intellectual centre.',
+          'Abd al-Rahman III proclama el Califato, convirtiendo Córdoba en la ciudad más grande de Europa occidental y su principal centro intelectual.',
         branchSide: 'right',
         figures: [
           {
@@ -27,22 +27,22 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Ibn Rushd (Averroes)',
             born: 1126,
             died: 1198,
-            role: 'Philosopher & Physician',
+            role: 'Filósofo y médico',
             notableWorks: [
-              { title: 'Commentaries on Aristotle', year: 1169, medium: 'other' },
+              { title: 'Comentarios a Aristóteles', year: 1169, medium: 'other' },
               { title: 'Tahāfut al-Tahāfut', year: 1180, medium: 'other' },
             ],
             connections: ['maimonides'],
           },
           {
             id: 'maimonides',
-            name: 'Maimonides',
+            name: 'Maimónides',
             born: 1135,
             died: 1204,
-            role: 'Jewish Philosopher & Physician',
+            role: 'Filósofo y médico judío',
             notableWorks: [
               { title: 'Mishneh Torah', year: 1180, medium: 'other' },
-              { title: 'The Guide for the Perplexed', year: 1190, medium: 'other' },
+              { title: 'Guía de los perplejos', year: 1190, medium: 'other' },
             ],
             connections: ['averroes'],
           },
@@ -54,7 +54,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Mezquita de Córdoba',
         year: 785,
         description:
-          'Construction begins on the Great Mosque — a forest of 856 marble columns and red-and-white striped arches later converted into a cathedral.',
+          'Se inicia la construcción de la Gran Mezquita — un bosque de 856 columnas de mármol y arcos bicolores en rojo y blanco, convertida siglos después en catedral.',
         branchSide: 'left',
         figures: [
           {
@@ -62,9 +62,9 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Abd al-Rahman I',
             born: 731,
             died: 788,
-            role: 'Founder of the Emirate of Córdoba',
+            role: 'Fundador del Emirato de Córdoba',
             notableWorks: [
-              { title: 'Great Mosque of Córdoba (first phase)', year: 785, medium: 'architecture' },
+              { title: 'Gran Mezquita de Córdoba (primera fase)', year: 785, medium: 'architecture' },
             ],
           },
         ],
@@ -76,21 +76,21 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
   {
     id: 'reconquista-1492',
     year: 1492,
-    era: 'Late Medieval · Early Modern',
-    title: 'Reconquista & Nuevo Mundo',
+    era: 'Baja Edad Media · Edad Moderna',
+    title: 'Reconquista y Nuevo Mundo',
     shortDesc:
-      'Granada falls, Columbus sails — Spain becomes a world empire in a single year.',
+      'Cae Granada, zarpa Colón — España se convierte en un imperio mundial en un solo año.',
     fullDesc:
-      'In 1492, three seismic events reshaped history simultaneously: the fall of Granada ended 780 years of Islamic rule; Columbus reached the Americas; and the Alhambra Decree expelled the Jewish communities, shattering the Convivencia. Within a generation, Spain controlled a global empire stretching from the Caribbean to the Philippines. The wealth — and the violence — of conquest would fund the Golden Age while accelerating the decimation of indigenous civilisations.',
-    tags: ['reconquista', 'exploration', 'empire', 'columbus'],
+      'En 1492 tuvieron lugar tres sucesos que transformaron simultáneamente la historia: la caída de Granada puso fin a 780 años de dominio islámico; Colón llegó a América; y el Decreto de la Alhambra expulsó a las comunidades judías, quebrando la Convivencia. En una generación, España controlaba un imperio global que se extendía desde el Caribe hasta las Filipinas. La riqueza — y la violencia — de la conquista financiaría el Siglo de Oro, a la vez que aceleraba la devastación de las civilizaciones indígenas.',
+    tags: ['reconquista', 'exploración', 'imperio', 'colón'],
     subNodes: [
       {
         id: 'fall-of-granada',
         type: 'battle',
-        label: 'Fall of Granada',
+        label: 'Caída de Granada',
         year: 1492,
         description:
-          'Sultan Boabdil hands the keys of the Alhambra to the Catholic Monarchs on January 2 — the last Muslim kingdom in Iberia falls without a siege.',
+          'El sultán Boabdil entrega las llaves de la Alhambra a los Reyes Católicos el 2 de enero — el último reino musulmán de la Península cae sin necesidad de asedio.',
         branchSide: 'left',
         figures: [
           {
@@ -98,7 +98,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Muhammad XII (Boabdil)',
             born: 1460,
             died: 1527,
-            role: 'Last Sultan of Granada',
+            role: 'Último sultán de Granada',
             notableWorks: [],
           },
           {
@@ -106,9 +106,9 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Los Reyes Católicos',
             born: 1451,
             died: 1516,
-            role: 'Catholic Monarchs — unified Castile & Aragon',
+            role: 'Monarcas que unificaron Castilla y Aragón',
             notableWorks: [
-              { title: 'Alhambra Decree (Expulsion of the Jews)', year: 1492, medium: 'other' },
+              { title: 'Decreto de la Alhambra (expulsión de los judíos)', year: 1492, medium: 'other' },
             ],
           },
         ],
@@ -119,7 +119,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Viaje de Colón',
         year: 1492,
         description:
-          'Columbus reaches the Bahamas on October 12, 1492. The encounter between worlds sets off a biological, cultural, and demographic exchange that will transform both hemispheres.',
+          'Colón llega a las Bahamas el 12 de octubre de 1492. El encuentro entre dos mundos desencadena un intercambio biológico, cultural y demográfico que transformará ambos hemisferios.',
         branchSide: 'right',
         figures: [
           {
@@ -127,10 +127,10 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Cristóbal Colón',
             born: 1451,
             died: 1506,
-            role: 'Navigator & Explorer',
+            role: 'Navegante y explorador',
             notableWorks: [
               { title: 'Diario de a Bordo', year: 1492, medium: 'other' },
-              { title: 'Letter to Luis de Santángel', year: 1493, medium: 'other' },
+              { title: 'Carta a Luis de Santángel', year: 1493, medium: 'other' },
             ],
           },
         ],
@@ -142,13 +142,13 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
   {
     id: 'siglo-de-oro',
     year: 1605,
-    era: 'Golden Age',
+    era: 'Siglo de Oro',
     title: 'Siglo de Oro',
     shortDesc:
-      `Cervantes, Velázquez, Lope de Vega — Spain's cultural zenith defines Western art and literature.`,
+      'Cervantes, Velázquez, Lope de Vega — el cénit cultural de España define el arte y la literatura de Occidente.',
     fullDesc:
-      `Roughly 1550–1680, the Spanish Golden Age produced an extraordinary simultaneous flowering of drama, poetry, painting, and prose. Imperial wealth funded patronage on an unprecedented scale. Cervantes published the first modern novel. Velázquez created the most technically sophisticated paintings of the seventeenth century. Lope de Vega wrote over 400 plays, inventing modern theatrical conventions. Counter-Reformation zeal and imperial anxiety ran as counter-currents beneath the cultural brilliance.`,
-    tags: ['literature', 'painting', 'theater', 'baroque', 'empire'],
+      `Entre 1550 y 1680 aproximadamente, el Siglo de Oro español produjo un extraordinario florecimiento simultáneo del teatro, la poesía, la pintura y la prosa. La riqueza imperial financió el mecenazgo a una escala sin precedentes. Cervantes publicó la primera novela moderna. Velázquez creó las pinturas técnicamente más sofisticadas del siglo XVII. Lope de Vega escribió más de 400 obras de teatro, inventando las convenciones del teatro moderno. El fervor contrarreformista y la ansiedad imperial corrían como contracorrientes bajo el esplendor cultural.`,
+    tags: ['literatura', 'pintura', 'teatro', 'barroco', 'imperio'],
     subNodes: [
       {
         id: 'don-quijote',
@@ -156,7 +156,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Don Quijote (1605)',
         year: 1605,
         description:
-          'Cervantes publishes the first modern novel — a self-aware, polyphonic meditation on reality, fiction, and idealism that will influence every major novelist after it.',
+          'Cervantes publica la primera novela moderna — una meditación autoconsciente y polifónica sobre la realidad, la ficción y el idealismo que influirá en todos los grandes novelistas posteriores.',
         branchSide: 'left',
         figures: [
           {
@@ -164,10 +164,10 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Miguel de Cervantes',
             born: 1547,
             died: 1616,
-            role: 'Novelist & Playwright',
+            role: 'Novelista y dramaturgo',
             notableWorks: [
-              { title: 'El ingenioso hidalgo Don Quijote (Part I)', year: 1605, medium: 'novel' },
-              { title: 'Don Quijote de la Mancha (Part II)', year: 1615, medium: 'novel' },
+              { title: 'El ingenioso hidalgo Don Quijote (Primera parte)', year: 1605, medium: 'novel' },
+              { title: 'Don Quijote de la Mancha (Segunda parte)', year: 1615, medium: 'novel' },
               { title: 'Novelas ejemplares', year: 1613, medium: 'novel' },
             ],
           },
@@ -179,7 +179,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Pintura Barroca',
         year: 1650,
         description:
-          'The court of Philip IV becomes the most important artistic patronage network in Europe, producing masterworks that define Western painting.',
+          'La corte de Felipe IV se convierte en la red de mecenazgo artístico más importante de Europa, produciendo obras maestras que definen la pintura occidental.',
         branchSide: 'right',
         figures: [
           {
@@ -187,7 +187,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Diego Velázquez',
             born: 1599,
             died: 1660,
-            role: 'Court Painter to Philip IV',
+            role: 'Pintor de cámara de Felipe IV',
             notableWorks: [
               { title: 'Las Meninas', year: 1656, medium: 'painting' },
               { title: 'La rendición de Breda', year: 1635, medium: 'painting' },
@@ -199,7 +199,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Bartolomé Esteban Murillo',
             born: 1617,
             died: 1682,
-            role: 'Painter',
+            role: 'Pintor',
             notableWorks: [
               {
                 title: 'La Inmaculada Concepción de los Venerables',
@@ -216,7 +216,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Teatro del Siglo de Oro',
         year: 1615,
         description:
-          'The corrales de comedias host a theatrical revolution. Lope de Vega alone writes over 400 plays, defining the comedia nueva and inventing modern theatrical conventions.',
+          'Los corrales de comedias acogen una revolución teatral. Lope de Vega escribe más de 400 obras, definiendo la comedia nueva e inventando las convenciones del teatro moderno.',
         branchSide: 'left',
         figures: [
           {
@@ -224,7 +224,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Lope de Vega',
             born: 1562,
             died: 1635,
-            role: 'Playwright & Poet',
+            role: 'Dramaturgo y poeta',
             notableWorks: [
               { title: 'Fuente Ovejuna', year: 1619, medium: 'play' },
               { title: 'El caballero de Olmedo', year: 1620, medium: 'play' },
@@ -236,7 +236,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Pedro Calderón de la Barca',
             born: 1600,
             died: 1681,
-            role: 'Playwright',
+            role: 'Dramaturgo',
             notableWorks: [
               { title: 'La vida es sueño', year: 1635, medium: 'play' },
               { title: 'El alcalde de Zalamea', year: 1651, medium: 'play' },
@@ -251,13 +251,13 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
   {
     id: 'guerra-civil',
     year: 1936,
-    era: 'Modern',
+    era: 'Edad Contemporánea',
     title: 'Guerra Civil Española',
     shortDesc:
-      'A brutal three-year war divides Spain and mobilises the greatest artists and writers of the century.',
+      'Una brutal guerra de tres años divide España y moviliza a los más grandes artistas y escritores del siglo.',
     fullDesc:
-      `Franco's Nationalist forces, backed by Nazi Germany and Fascist Italy, fought the elected Republican government supported by the Soviet Union and 35,000 International Brigade volunteers. Between 500,000 and 1,000,000 people died. The war produced some of the most powerful anti-fascist art in history — Picasso's Guernica, Lorca's blood tragedies, Buñuel's exile — and ended with a dictatorship that would last 36 years.`,
-    tags: ['war', 'poetry', 'surrealism', 'tragedy', 'exile'],
+      `Las fuerzas nacionales de Franco, respaldadas por la Alemania nazi y la Italia fascista, combatieron al Gobierno republicano legítimamente elegido, apoyado por la Unión Soviética y 35.000 voluntarios de las Brigadas Internacionales. Entre 500.000 y 1.000.000 de personas perdieron la vida. La guerra produjo algunas de las obras antifascistas más poderosas de la historia — el Guernica de Picasso, las tragedias de Lorca, el exilio de Buñuel — y concluyó con una dictadura que duraría 36 años.`,
+    tags: ['guerra', 'poesía', 'surrealismo', 'tragedia', 'exilio'],
     subNodes: [
       {
         id: 'generacion-27',
@@ -265,7 +265,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Generación del 27',
         year: 1927,
         description:
-          'Named after the 1927 Seville tribute to Góngora, this constellation of poets and artists fused European avant-garde with deep Spanish poetic tradition. Many were killed, exiled, or silenced by the war.',
+          'Bautizada con el nombre del homenaje a Góngora celebrado en Sevilla en 1927, esta constelación de poetas y artistas fusionó las vanguardias europeas con la profunda tradición poética española. Muchos fueron asesinados, exiliados o silenciados por la guerra.',
         branchSide: 'left',
         figures: [
           {
@@ -273,7 +273,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Federico García Lorca',
             born: 1898,
             died: 1936,
-            role: 'Poet & Playwright',
+            role: 'Poeta y dramaturgo',
             notableWorks: [
               { title: 'Romancero Gitano', year: 1928, medium: 'poem' },
               { title: 'Poeta en Nueva York', year: 1940, medium: 'poem' },
@@ -287,7 +287,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Rafael Alberti',
             born: 1902,
             died: 1999,
-            role: 'Poet',
+            role: 'Poeta',
             notableWorks: [
               { title: 'Marinero en tierra', year: 1925, medium: 'poem' },
               { title: 'Sobre los ángeles', year: 1929, medium: 'poem' },
@@ -299,7 +299,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'María Zambrano',
             born: 1904,
             died: 1991,
-            role: 'Philosopher',
+            role: 'Filósofa',
             notableWorks: [
               { title: 'Horizonte del liberalismo', year: 1930, medium: 'other' },
               { title: 'Delirio y destino', year: 1952, medium: 'other' },
@@ -313,7 +313,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Surrealismo Español',
         year: 1929,
         description:
-          `Dalí and Buñuel break into the European avant-garde from Madrid's Residencia de Estudiantes — where they had also befriended García Lorca.`,
+          `Dalí y Buñuel irrumpen en la vanguardia europea desde la Residencia de Estudiantes de Madrid, donde también habían trabado amistad con García Lorca.`,
         branchSide: 'right',
         figures: [
           {
@@ -321,7 +321,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Salvador Dalí',
             born: 1904,
             died: 1989,
-            role: 'Painter & Surrealist',
+            role: 'Pintor y surrealista',
             notableWorks: [
               { title: 'La persistencia de la memoria', year: 1931, medium: 'painting' },
               { title: 'El gran masturbador', year: 1929, medium: 'painting' },
@@ -334,7 +334,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Luis Buñuel',
             born: 1900,
             died: 1983,
-            role: 'Filmmaker',
+            role: 'Cineasta',
             notableWorks: [
               { title: 'Un Chien Andalou', year: 1929, medium: 'film' },
               { title: "L'Age d'Or", year: 1930, medium: 'film' },
@@ -351,7 +351,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Bombardeo de Guernica',
         year: 1937,
         description:
-          `Nazi Germany's Condor Legion bombs the Basque market town on April 26, killing hundreds of civilians. Picasso responds in six weeks with his most famous work.`,
+          `La Legión Cóndor de la Alemania nazi bombardea la localidad vasca el 26 de abril, causando cientos de víctimas civiles. Picasso responde en seis semanas con su obra más célebre.`,
         branchSide: 'right',
         figures: [
           {
@@ -359,11 +359,11 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Pablo Picasso',
             born: 1881,
             died: 1973,
-            role: 'Painter & Sculptor',
+            role: 'Pintor y escultor',
             notableWorks: [
               { title: 'Guernica', year: 1937, medium: 'painting' },
               { title: "Les Demoiselles d'Avignon", year: 1907, medium: 'painting' },
-              { title: 'Weeping Woman', year: 1937, medium: 'painting' },
+              { title: 'La mujer que llora', year: 1937, medium: 'painting' },
             ],
           },
         ],
@@ -374,7 +374,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Brigadas Internacionales',
         year: 1936,
         description:
-          '35,000 volunteers from 54 countries join the Republican cause. The war attracts the most prominent anti-fascist writers and journalists of the era.',
+          '35.000 voluntarios de 54 países se unen a la causa republicana. La guerra atrae a los escritores y periodistas antifascistas más destacados de la época.',
         branchSide: 'left',
         figures: [
           {
@@ -382,9 +382,9 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'George Orwell',
             born: 1903,
             died: 1950,
-            role: 'Writer & POUM Militiaman',
+            role: 'Escritor y miliciano del POUM',
             notableWorks: [
-              { title: 'Homage to Catalonia', year: 1938, medium: 'other' },
+              { title: 'Homenaje a Cataluña', year: 1938, medium: 'other' },
               { title: '1984', year: 1949, medium: 'novel' },
             ],
           },
@@ -397,13 +397,13 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
   {
     id: 'franquismo',
     year: 1939,
-    era: 'Contemporary',
+    era: 'Época Contemporánea',
     title: 'Franquismo',
     shortDesc:
-      'Four decades of dictatorship suppress culture, exile artists, and reshape Spanish identity.',
+      'Cuatro décadas de dictadura suprimen la cultura, exilian a los artistas y reconfiguran la identidad española.',
     fullDesc:
-      `Franco's regime (1939–1975) enforced cultural repression, mandatory Castilian, and Catholic orthodoxy. Some 500,000 went into exile — the Exilio Republicano — carrying Spanish culture into a global diaspora centred on Mexico City and Buenos Aires. Yet underground art, regional languages, and flamenco survived as forms of resistance. In the 1960s the technocratic Opus Dei "Miracle" transformed Spain from agrarian poverty into an industrial consumer economy, laying the paradoxical foundations for the democratic transition.`,
-    tags: ['dictatorship', 'exile', 'resistance', 'censorship', 'flamenco'],
+      `El régimen de Franco (1939–1975) impuso la represión cultural, el castellano como única lengua oficial y la ortodoxia católica. Alrededor de 500.000 personas marcharon al exilio — el Exilio Republicano — llevando la cultura española a una diáspora global centrada en Ciudad de México y Buenos Aires. Sin embargo, el arte clandestino, las lenguas regionales y el flamenco sobrevivieron como formas de resistencia. En los años sesenta, el «Milagro» tecnocrático del Opus Dei transformó España de una economía agraria empobrecida en una sociedad industrial de consumo, sentando las paradójicas bases de la transición democrática.`,
+    tags: ['dictadura', 'exilio', 'resistencia', 'censura', 'flamenco'],
     subNodes: [
       {
         id: 'exilio-republicano',
@@ -411,7 +411,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Exilio Republicano',
         year: 1939,
         description:
-          'Half a million Republicans flee across the Pyrenees after the fall of Catalonia. Mexican president Lázaro Cárdenas opens the country to them — Mexico City becomes the capital of Republican Spain in exile.',
+          'Medio millón de republicanos huyen a través de los Pirineos tras la caída de Cataluña. El presidente mexicano Lázaro Cárdenas les abre el país — Ciudad de México se convierte en la capital de la España republicana en el exilio.',
         branchSide: 'left',
         figures: [
           {
@@ -419,7 +419,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Rafael Alberti (exilio)',
             born: 1902,
             died: 1999,
-            role: 'Poet — exiled to Argentina',
+            role: 'Poeta — exiliado en Argentina',
             notableWorks: [
               { title: 'Retornos de lo vivo lejano', year: 1952, medium: 'poem' },
               { title: 'Roma, peligro para caminantes', year: 1968, medium: 'poem' },
@@ -430,7 +430,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Luis Buñuel (exilio)',
             born: 1900,
             died: 1983,
-            role: 'Filmmaker — exiled to Mexico',
+            role: 'Cineasta — exiliado en México',
             notableWorks: [
               { title: 'Los olvidados', year: 1950, medium: 'film' },
               { title: 'Viridiana', year: 1961, medium: 'film' },
@@ -445,7 +445,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Flamenco como Resistencia',
         year: 1955,
         description:
-          'Flamenco preserves Andalusian Romani identity under the paradox of simultaneous repression and co-option by the Franco regime for tourism. Its deepest song form — the siguiriya — becomes a coded language of mourning.',
+          'El flamenco preserva la identidad gitana andaluza bajo la paradoja de la represión y la cooptación simultáneas por parte del régimen franquista con fines turísticos. Su forma de cante más profunda — la siguiriya — se convierte en un lenguaje codificado del duelo.',
         branchSide: 'right',
         figures: [
           {
@@ -453,7 +453,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Camarón de la Isla',
             born: 1950,
             died: 1992,
-            role: 'Cantaor (Flamenco Singer)',
+            role: 'Cantaor flamenco',
             notableWorks: [
               { title: 'La leyenda del tiempo', year: 1979, medium: 'other' },
               { title: 'Potro de rabia y miel', year: 1992, medium: 'other' },
@@ -465,7 +465,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Paco de Lucía',
             born: 1947,
             died: 2014,
-            role: 'Flamenco Guitarist',
+            role: 'Guitarrista flamenco',
             notableWorks: [
               { title: 'Entre dos aguas', year: 1973, medium: 'other' },
               { title: 'Sólo quiero caminar', year: 1981, medium: 'other' },
@@ -481,13 +481,13 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
   {
     id: 'transicion-movida',
     year: 1975,
-    era: 'Contemporary',
+    era: 'Época Contemporánea',
     title: 'Transición y La Movida',
     shortDesc:
-      'Franco dies. Spain explodes into democracy — and a decade of radical artistic freedom.',
+      'Muere Franco. España estalla en democracia — y una década de radical libertad artística.',
     fullDesc:
-      `Franco's death in November 1975 triggered Spain's extraordinary democratic transition, culminating in the 1978 Constitution. The released energy of 40 years of repression erupted in "La Movida Madrileña" (1977–1992) — a counter-cultural explosion of music, cinema, fashion, and queer visibility centred in Madrid. Pedro Almodóvar emerged from this scene. Spain joined the EEC in 1986 and hosted the Barcelona Olympics in 1992, completing its integration into the modern European order.`,
-    tags: ['democracy', 'culture', 'cinema', 'movida', 'music'],
+      `La muerte de Franco en noviembre de 1975 desencadenó la extraordinaria transición democrática española, que culminó con la Constitución de 1978. La energía reprimida durante 40 años de dictadura estalló en «La Movida Madrileña» (1977–1992) — una explosión contracultural de música, cine, moda y visibilidad queer centrada en Madrid. Pedro Almodóvar emergió de esta escena. España ingresó en la CEE en 1986 y acogió los Juegos Olímpicos de Barcelona en 1992, completando su integración en el orden europeo moderno.`,
+    tags: ['democracia', 'cultura', 'cine', 'movida', 'música'],
     subNodes: [
       {
         id: 'movida-madrilena',
@@ -495,14 +495,14 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'La Movida Madrileña',
         year: 1977,
         description:
-          `Madrid's counter-cultural explosion — punk, new wave, underground comics, performance art, and visible queer culture flourish after four decades of repression.`,
+          `La explosión contracultural de Madrid — punk, nueva ola, cómics underground, performance art y cultura queer visible florecen tras cuatro décadas de represión.`,
         branchSide: 'left',
         figures: [
           {
             id: 'almodovar',
             name: 'Pedro Almodóvar',
             born: 1949,
-            role: 'Filmmaker',
+            role: 'Cineasta',
             notableWorks: [
               { title: 'Pepi, Luci, Bom', year: 1980, medium: 'film' },
               { title: 'Mujeres al borde de un ataque de nervios', year: 1988, medium: 'film' },
@@ -514,7 +514,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             id: 'alaska',
             name: 'Alaska (Olvido Gara)',
             born: 1963,
-            role: 'Singer & Movida Icon',
+            role: 'Cantante e icono de La Movida',
             notableWorks: [
               { title: 'Ni tú ni nadie', year: 1984, medium: 'other' },
               { title: 'A quién le importa', year: 1986, medium: 'other' },
@@ -528,7 +528,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Constitución de 1978',
         year: 1978,
         description:
-          `Spain's democratic constitution — drafted through unprecedented cross-party consensus — is approved by 88% of voters on December 6, establishing a parliamentary monarchy.`,
+          `La Constitución democrática española — redactada mediante un consenso entre fuerzas políticas sin precedentes — es aprobada por el 88 % de los votantes el 6 de diciembre, instaurando una monarquía parlamentaria.`,
         branchSide: 'right',
         figures: [
           {
@@ -536,7 +536,7 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
             name: 'Adolfo Suárez',
             born: 1932,
             died: 2014,
-            role: 'First Prime Minister of Democratic Spain',
+            role: 'Primer Presidente del Gobierno de la España democrática',
             notableWorks: [
               { title: 'Ley para la Reforma Política', year: 1976, medium: 'other' },
             ],
@@ -549,16 +549,16 @@ export const SPAIN_HISTORY: TimelineEvent[] = [
         label: 'Barcelona 1992',
         year: 1992,
         description:
-          `The Barcelona Olympics — designed by a generation of Catalan architects and designers — announce Spain's arrival as a modern creative nation. Javier Mariscal's mascot Cobi becomes a design landmark.`,
+          `Los Juegos Olímpicos de Barcelona — diseñados por una generación de arquitectos y diseñadores catalanes — proclaman la llegada de España como nación creativa moderna. La mascota Cobi, de Javier Mariscal, se convierte en un hito del diseño.`,
         branchSide: 'left',
         figures: [
           {
             id: 'mariscal',
             name: 'Javier Mariscal',
             born: 1950,
-            role: 'Designer & Illustrator',
+            role: 'Diseñador e ilustrador',
             notableWorks: [
-              { title: 'Cobi (Olympic Mascot)', year: 1986, medium: 'other' },
+              { title: 'Cobi (Mascota Olímpica)', year: 1986, medium: 'other' },
               { title: 'Duplex Bar, Barcelona', year: 1989, medium: 'architecture' },
             ],
           },

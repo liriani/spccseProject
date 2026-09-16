@@ -3,6 +3,7 @@ import { TimelineMindMap } from './components/timeline/TimelineMindMap'
 import { DocumentWallet } from './components/sociedad/DocumentWallet'
 import { RoutineTimeSlider } from './components/sociedad/RoutineTimeSlider'
 import { EmergencyPhone } from './components/sociedad/EmergencyPhone'
+import { FestiveCalendar } from './components/cultura/FestiveCalendar'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -2213,6 +2214,13 @@ export default function App() {
                   <MediaCard key={i} gif={gif} color={mod.color} />
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* ── Festive Calendar (Module 4 only) ── */}
+          {mod.id === 4 && (
+            <div>
+              <FestiveCalendar />
             </div>
           )}
 
