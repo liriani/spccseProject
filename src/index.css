@@ -114,3 +114,17 @@ body {
   transform: translateY(2px);
   box-shadow: 0px 0px 0 #1A1A2E !important;
 }
+
+/* Onboarding dot pulse */
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+}
+.animate-dot-pulse { animation: dot-pulse 1.2s ease-in-out infinite; }
+
+/* Modal backdrop */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in { animation: fade-in 0.25s ease forwards; }
