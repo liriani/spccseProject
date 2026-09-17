@@ -51,25 +51,57 @@ export function MapGame({ color }: { color: string }) {
         {SPAIN_REGIONS.map(r => {
           const isFound = found.has(r.id)
           const isShaking = shake === r.id
+          // Label goes above the pin for southern regions to avoid bottom overflow
+          const labelAbove = r.y >= 68
           return (
-            <button
+            <div
               key={r.id}
-              onClick={() => click(r.id)}
-              className={`absolute rounded-full border-2 border-white cursor-pointer transition-all duration-200 hover:scale-125 ${isShaking ? 'animate-shake' : ''}`}
               style={{
+                position: 'absolute',
                 left: `${r.x}%`,
                 top: `${r.y}%`,
                 transform: 'translate(-50%, -50%)',
-                background: isFound ? '#58CC02' : (done ? '#1CB0F6' : color),
-                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                zIndex: isFound ? 5 : 2,
-                width: '2rem',
-                height: '2rem',
-                minWidth: '2rem',
-                minHeight: '2rem',
+                zIndex: isFound ? 10 : 2,
               }}
-              title={isFound ? r.name : '?'}
-            />
+            >
+              <button
+                onClick={() => click(r.id)}
+                className={`rounded-full border-2 border-white cursor-pointer transition-all duration-200 hover:scale-125 ${isShaking ? 'animate-shake' : ''}`}
+                style={{
+                  display: 'block',
+                  background: isFound ? '#58CC02' : (done ? '#1CB0F6' : color),
+                  boxShadow: '0 2px 5px rgba(0,0,0,0.35)',
+                  width: '1.0rem',
+                  height: '1.0rem',
+                  minWidth: '1.0rem',
+                  minHeight: '1.0rem',
+                }}
+                title={isFound ? r.name : '?'}
+              />
+              {isFound && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '50%',
+                    [labelAbove ? 'bottom' : 'top']: 'calc(100% + 3px)',
+                    transform: 'translateX(-50%)',
+                    background: 'rgba(255,255,255,0.96)',
+                    border: '1.5px solid #1A1A2E',
+                    borderRadius: '4px',
+                    padding: '1px 5px',
+                    fontSize: '8px',
+                    fontWeight: 800,
+                    color: '#1A1A2E',
+                    whiteSpace: 'nowrap',
+                    boxShadow: '1px 1px 0 #1A1A2E',
+                    pointerEvents: 'none',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {r.name}
+                </div>
+              )}
+            </div>
           )
         })}
       </div>
